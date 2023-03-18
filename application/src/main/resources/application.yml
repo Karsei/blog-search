@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: blog-search
+  jpa:
+    hibernate:
+      ddl-auto: create
+    open-in-view: false
+    show-sql: true
+  h2:
+    console:
+      enabled: true
