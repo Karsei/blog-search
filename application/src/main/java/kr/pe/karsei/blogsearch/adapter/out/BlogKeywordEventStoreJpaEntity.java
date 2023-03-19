@@ -22,15 +22,8 @@ public class BlogKeywordEventStoreJpaEntity {
     @Column
     private String payload;
 
-    @Column
-    private boolean ack;
-
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private Date createdAt;
-
-    public void updateAck(boolean ack) {
-        this.ack = ack;
-    }
 }
