@@ -1,18 +1,24 @@
 package kr.pe.karsei.blogsearch.dto;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class FetchBlogKeywordTop {
     /**
      * 키워드
      */
-    private String keyword;
+    private final String keyword;
 
     /**
      * 검색한 횟수
      */
-    private Integer hit;
+    private final int hit;
+
+    @Builder
+    public FetchBlogKeywordTop(final String keyword,
+                               final int hit) {
+        this.keyword = keyword;
+        this.hit = hit;
+    }
 }

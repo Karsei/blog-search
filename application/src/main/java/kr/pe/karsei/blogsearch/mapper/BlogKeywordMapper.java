@@ -15,7 +15,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class BlogKeywordMapper {
     public static FetchBlogKeyword.Param mapRequestToParam(RequestBlogKeyword request) {
-        return new FetchBlogKeyword.Param(request.getQuery(), request.getSort(), request.getPage(), request.getSize());
+        return FetchBlogKeyword.Param.builder()
+                .query(request.getQuery())
+                .sort(request.getSort())
+                .page(request.getPage())
+                .size(request.getSize())
+                .build();
     }
 
     public static List<FetchBlogKeywordTop> mapSearchEntityListToDto(List<BlogKeywordCountJpaEntity> entities) {
@@ -48,6 +53,9 @@ public abstract class BlogKeywordMapper {
                 .pageableCount(kakaoSearchInfo.getMeta().getPageableCount())
                 .totalCount(kakaoSearchInfo.getMeta().getTotalCount())
                 .build();
-        return new FetchBlogKeyword.Info(documents, meta);
+        return FetchBlogKeyword.Info.builder()
+                .documents(documents)
+                .meta(meta)
+                .build();
     }
 }
