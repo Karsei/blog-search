@@ -34,7 +34,7 @@ public class BlogKeywordSchedulerAdapter {
                 BlogKeywordEventStoreJpaEntity eventEntity = iterator.next();
 
                 // 키워드 조회 후 카운트 저장
-                loadKeywordAndSaveCount(eventEntity);
+                findKeywordAndSaveCount(eventEntity);
 
                 // 마지막으로 조회한 이벤트 번호 저장
                 if (!iterator.hasNext()) {
@@ -47,7 +47,7 @@ public class BlogKeywordSchedulerAdapter {
         }
     }
 
-    private void loadKeywordAndSaveCount(final BlogKeywordEventStoreJpaEntity eventEntity) {
+    private void findKeywordAndSaveCount(final BlogKeywordEventStoreJpaEntity eventEntity) {
         // 수집된 키워드를 불러온다.
         String keyword = eventEntity.getPayload();
 
