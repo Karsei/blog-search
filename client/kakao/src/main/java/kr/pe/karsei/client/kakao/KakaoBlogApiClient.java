@@ -14,5 +14,5 @@ public interface KakaoBlogApiClient {
      * @return 결과
      */
     @GetMapping("/v2/search/blog")
-    KakaoBlogSearch.Info searchBlog(@SpringQueryMap KakaoBlogSearch.Param param);
+    KakaoBlogSearch.Info search(@SpringQueryMap KakaoBlogSearch.Param param);
 }

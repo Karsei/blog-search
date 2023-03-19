@@ -20,6 +20,6 @@ public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
     }
 
     private KakaoBlogSearch.Info searchBlogWithKakao(final FetchBlogKeyword.Param params) {
-        return kakaoBlogApiClient.searchBlog(BlogKeywordMapper.mapSearchParamToKakaoBlogSearchParam(params));
+        return kakaoBlogApiClient.search(BlogKeywordMapper.mapSearchParamToKakaoBlogSearchParam(params));
     }
 }
