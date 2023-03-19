@@ -11,8 +11,15 @@ import java.util.List;
 public class KakaoBlogSearch {
     @Getter
     public static class Info {
-        private List<Document> documents;
-        private Meta meta;
+        private final List<Document> documents;
+        private final Meta meta;
+
+        @Builder
+        public Info(final List<Document> documents,
+                    final Meta meta) {
+            this.documents = documents;
+            this.meta = meta;
+        }
 
         @Getter
         public static class Document {
@@ -48,6 +55,21 @@ public class KakaoBlogSearch {
              * 블로그 글 URL
              */
             private String url;
+
+            @Builder
+            public Document(final String blogName,
+                            final String contents,
+                            final ZonedDateTime dateTime,
+                            final String thumbnail,
+                            final String title,
+                            final String url) {
+                this.blogName = blogName;
+                this.contents = contents;
+                this.dateTime = dateTime;
+                this.thumbnail = thumbnail;
+                this.title = title;
+                this.url = url;
+            }
         }
 
         @Getter
@@ -70,6 +92,15 @@ public class KakaoBlogSearch {
              */
             @JsonProperty(value = "total_count")
             private int totalCount;
+
+            @Builder
+            public Meta(final boolean isEnd,
+                        final int pageableCount,
+                        final int totalCount) {
+                this.isEnd = isEnd;
+                this.pageableCount = pageableCount;
+                this.totalCount = totalCount;
+            }
         }
     }
 
