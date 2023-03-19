@@ -120,6 +120,7 @@ public class KakaoBlogSearch {
             @JsonValue
             @Override
             public String toString() {
+                // 실제 API 에서 대문자로는 먹히지 않는다. 사양대로 소문자로 해야 한다.
                 return this.name().toLowerCase();
             }
         }
