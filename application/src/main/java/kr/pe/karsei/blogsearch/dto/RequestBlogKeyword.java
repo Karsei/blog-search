@@ -1,13 +1,11 @@
 package kr.pe.karsei.blogsearch.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class RequestBlogKeyword {
     @NotBlank
     private String query;
