@@ -4,7 +4,7 @@ import kr.pe.karsei.blogsearch.dto.FetchBlogKeywordTop;
 
 import java.util.List;
 
-public interface BlogKeywordCollectLoadPort {
+public interface BlogKeywordCountLoadPort {
     /**
      * 자주 조회하는 블로그 검색어 목록을 내림차순으로 조회합니다.
      * @param size 출력 개수

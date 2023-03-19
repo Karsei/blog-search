@@ -1,6 +1,6 @@
 package kr.pe.karsei.blogsearch.mapper;
 
-import kr.pe.karsei.blogsearch.adapter.out.BlogKeywordCollectJpaEntity;
+import kr.pe.karsei.blogsearch.adapter.out.BlogKeywordCountJpaEntity;
 import kr.pe.karsei.blogsearch.dto.RequestBlogKeyword;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeywordTop;
@@ -18,7 +18,7 @@ public abstract class BlogKeywordMapper {
         return new FetchBlogKeyword.Param(request.getQuery(), request.getSort(), request.getPage(), request.getSize());
     }
 
-    public static List<FetchBlogKeywordTop> mapSearchEntityListToDto(List<BlogKeywordCollectJpaEntity> entities) {
+    public static List<FetchBlogKeywordTop> mapSearchEntityListToDto(List<BlogKeywordCountJpaEntity> entities) {
         return entities.stream()
                 .map(e -> new FetchBlogKeywordTop(e.getKeyword(), e.getHit()))
                 .collect(Collectors.toList());

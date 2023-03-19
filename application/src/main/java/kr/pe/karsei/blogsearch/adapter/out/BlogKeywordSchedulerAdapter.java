@@ -1,7 +1,7 @@
 package kr.pe.karsei.blogsearch.adapter.out;
 
 import jakarta.persistence.EntityManager;
-import kr.pe.karsei.blogsearch.repository.BlogKeywordCollectRepository;
+import kr.pe.karsei.blogsearch.repository.BlogKeywordCountRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventSnapshotRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventStoreRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class BlogKeywordSchedulerAdapter {
     private final EntityManager entityManager;
-    private final BlogKeywordCollectRepository collectRepository;
+    private final BlogKeywordCountRepository collectRepository;
     private final BlogKeywordEventStoreRepository eventStoreRepository;
     private final BlogKeywordEventSnapshotRepository eventSnapshotRepository;
 
@@ -35,11 +35,11 @@ public class BlogKeywordSchedulerAdapter {
 
                 // 수집된 키워드를 불러온다.
                 String keyword = event.getPayload();
-                BlogKeywordCollectJpaEntity keywordEntity = collectRepository.findByKeyword(keyword)
-                        .orElseGet(() -> new BlogKeywordCollectJpaEntity(null, keyword, 0, null));
+                BlogKeywordCountJpaEntity keywordEntity = collectRepository.findByKeyword(keyword)
+                        .orElseGet(() -> new BlogKeywordCountJpaEntity(null, keyword, 0, null));
 
                 // 저장
-                collectRepository.save(new BlogKeywordCollectJpaEntity(
+                collectRepository.save(new BlogKeywordCountJpaEntity(
                         keywordEntity.getId(),
                         keywordEntity.getKeyword(),
                         keywordEntity.getHit() + 1,

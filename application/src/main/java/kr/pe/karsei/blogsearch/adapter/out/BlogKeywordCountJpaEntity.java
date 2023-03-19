@@ -14,7 +14,7 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class BlogKeywordCollectJpaEntity {
+public class BlogKeywordCountJpaEntity {
     @Id
     @GeneratedValue
     private Long id;
