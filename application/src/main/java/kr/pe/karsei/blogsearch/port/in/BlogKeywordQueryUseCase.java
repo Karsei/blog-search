@@ -18,5 +18,5 @@ public interface BlogKeywordQueryUseCase {
      * @param size 출력 개수
      * @return 인기 검색어 목록 결과
      */
-    List<FetchBlogKeywordTop> findTopBlogKeywords(final int size);
+    List<FetchBlogKeywordTop> findTopBlogKeywords(int size);
 }
