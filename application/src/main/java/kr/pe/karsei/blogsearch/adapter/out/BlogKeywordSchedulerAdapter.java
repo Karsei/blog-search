@@ -22,38 +22,43 @@ public class BlogKeywordSchedulerAdapter {
 
     @Scheduled(cron = "*/10 * * * * *")
     @Transactional
-    void eventListen() {
-        // 마지막 스냅샷 확인
-        BlogKeywordEventSnapshotJpaEntity id = eventSnapshotRepository.findFirstBy()
+    void countScheduler() {
+        // 마지막으로 조회했던 이벤트 번호 확인
+        BlogKeywordEventSnapshotJpaEntity lastEntity = eventSnapshotRepository.findFirstBy()
                 .orElseGet(() -> new BlogKeywordEventSnapshotJpaEntity(null, 0L));
 
         // 이벤트 조회
-        try (Stream<BlogKeywordEventStoreJpaEntity> eventStream = eventStoreRepository.findAllByIdGreaterThanOrderByCreatedAtAsc(id.getLastId())) {
+        try (Stream<BlogKeywordEventStoreJpaEntity> eventStream = eventStoreRepository.findAllByIdGreaterThanOrderByCreatedAtAsc(lastEntity.getLastId())) {
             Iterator<BlogKeywordEventStoreJpaEntity> iterator = eventStream.iterator();
             while (iterator.hasNext()) {
-                BlogKeywordEventStoreJpaEntity event = iterator.next();
+                BlogKeywordEventStoreJpaEntity eventEntity = iterator.next();
 
-                // 수집된 키워드를 불러온다.
-                String keyword = event.getPayload();
-                BlogKeywordCountJpaEntity keywordEntity = collectRepository.findByKeyword(keyword)
-                        .orElseGet(() -> new BlogKeywordCountJpaEntity(null, keyword, 0, null));
+                // 키워드 조회 후 카운트 저장
+                loadKeywordAndSaveCount(eventEntity);
 
-                // 저장
-                collectRepository.save(new BlogKeywordCountJpaEntity(
-                        keywordEntity.getId(),
-                        keywordEntity.getKeyword(),
-                        keywordEntity.getHit() + 1,
-                        keywordEntity.getCreatedAt()
-                ));
-
-                // 마지막 이벤트 번호 저장
+                // 마지막으로 조회한 이벤트 번호 저장
                 if (!iterator.hasNext()) {
-                    eventSnapshotRepository.save(new BlogKeywordEventSnapshotJpaEntity(id.getId(), event.getId()));
+                    eventSnapshotRepository.save(new BlogKeywordEventSnapshotJpaEntity(lastEntity.getId(), eventEntity.getId()));
                 }
 
                 // 영속성 컨텍스트에서 해제
-                entityManager.detach(event);
+                entityManager.detach(eventEntity);
             }
         }
+    }
+
+    private void loadKeywordAndSaveCount(final BlogKeywordEventStoreJpaEntity eventEntity) {
+        // 수집된 키워드를 불러온다.
+        String keyword = eventEntity.getPayload();
+
+        // 저장
+        collectRepository.save(collectRepository.findByKeyword(keyword)
+                .map(blogKeywordCountJpaEntity -> new BlogKeywordCountJpaEntity(
+                        blogKeywordCountJpaEntity.getId(),
+                        blogKeywordCountJpaEntity.getKeyword(),
+                        blogKeywordCountJpaEntity.getHit() + 1,
+                        blogKeywordCountJpaEntity.getCreatedAt()))
+                .orElseGet(() -> new BlogKeywordCountJpaEntity(null, keyword, 1, null))
+        );
     }
 }
