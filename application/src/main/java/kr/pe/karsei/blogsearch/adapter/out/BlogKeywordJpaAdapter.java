@@ -4,10 +4,8 @@ import kr.pe.karsei.blogsearch.config.annotation.Adapter;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeywordTop;
 import kr.pe.karsei.blogsearch.mapper.BlogKeywordMapper;
 import kr.pe.karsei.blogsearch.port.out.BlogKeywordCollectLoadPort;
-import kr.pe.karsei.blogsearch.port.out.BlogKeywordCollectSavePort;
 import kr.pe.karsei.blogsearch.port.out.EventSavePort;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordCollectRepository;
-import kr.pe.karsei.blogsearch.repository.BlogKeywordEventSnapshotRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventStoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +14,7 @@ import java.util.List;
 
 @Adapter
 @RequiredArgsConstructor
-public class BlogKeywordJpaAdapter implements BlogKeywordCollectLoadPort, BlogKeywordCollectSavePort, EventSavePort {
+public class BlogKeywordJpaAdapter implements BlogKeywordCollectLoadPort, EventSavePort {
     private final BlogKeywordCollectRepository collectRepository;
     private final BlogKeywordEventStoreRepository eventStoreRepository;
 
@@ -29,16 +27,5 @@ public class BlogKeywordJpaAdapter implements BlogKeywordCollectLoadPort, BlogKe
     @Override
     public void create(final String keyword) {
         eventStoreRepository.save(new BlogKeywordEventStoreJpaEntity(null, keyword, null));
-    }
-
-    @Override
-    public void increaseKeywordHit(final String keyword) {
-        BlogKeywordCollectJpaEntity record = collectRepository.findByKeyword(keyword)
-                .orElseGet(() -> new BlogKeywordCollectJpaEntity(null, keyword, 0, null));
-        collectRepository.save(new BlogKeywordCollectJpaEntity(
-                record.getId(),
-                record.getKeyword(),
-                record.getHit() + 1,
-                record.getCreatedAt()));
     }
 }
