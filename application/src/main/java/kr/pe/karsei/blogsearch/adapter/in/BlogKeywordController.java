@@ -41,7 +41,7 @@ public class BlogKeywordController {
      */
     @GetMapping("top-keywords")
     public ResponseEntity<List<FetchBlogKeywordTop>> searchTopKeywords(
-            @RequestParam @Valid @Max(10) @Positive final int size) {
+            @RequestParam(defaultValue = "10") @Valid @Max(10) @Positive final int size) {
         List<FetchBlogKeywordTop> keywords = queryUseCase.findTopBlogKeywords(size);
         return ResponseEntity.ok(keywords);
     }
