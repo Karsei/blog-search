@@ -5,6 +5,7 @@ import kr.pe.karsei.blogsearch.repository.BlogKeywordCountRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventSnapshotRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventStoreRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,17 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class BlogKeywordSchedulerAdapter {
     private final EntityManager entityManager;
-    private final BlogKeywordCountRepository collectRepository;
+    private final BlogKeywordCountRepository countRepository;
     private final BlogKeywordEventStoreRepository eventStoreRepository;
     private final BlogKeywordEventSnapshotRepository eventSnapshotRepository;
 
     @Scheduled(cron = "*/10 * * * * *")
     @Transactional
     void countScheduler() {
+        log.info("Scheduler Start");
+
         // 마지막으로 조회했던 이벤트 번호 확인
         BlogKeywordEventSnapshotJpaEntity lastEntity = eventSnapshotRepository.findFirstBy()
                 .orElseGet(() -> new BlogKeywordEventSnapshotJpaEntity(null, 0L));
@@ -45,6 +49,8 @@ public class BlogKeywordSchedulerAdapter {
                 entityManager.detach(eventEntity);
             }
         }
+
+        log.info("Scheduler End");
     }
 
     private void findKeywordAndSaveCount(final BlogKeywordEventStoreJpaEntity eventEntity) {
@@ -52,7 +58,7 @@ public class BlogKeywordSchedulerAdapter {
         String keyword = eventEntity.getPayload();
 
         // 저장
-        collectRepository.save(collectRepository.findByKeyword(keyword)
+        countRepository.save(countRepository.findByKeyword(keyword)
                 .map(blogKeywordCountJpaEntity -> new BlogKeywordCountJpaEntity(
                         blogKeywordCountJpaEntity.getId(),
                         blogKeywordCountJpaEntity.getKeyword(),
