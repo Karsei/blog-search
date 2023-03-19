@@ -96,7 +96,10 @@ public class KakaoBlogSearch {
         private final int size;
 
         @Builder
-        public Param(String query, Sort sort, int page, int size) {
+        public Param(final String query,
+                     final Sort sort,
+                     final int page,
+                     final int size) {
             this.query = query;
             this.sort = sort;
             this.page = page;
