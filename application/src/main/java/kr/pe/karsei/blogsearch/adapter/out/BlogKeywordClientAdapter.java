@@ -1,14 +1,14 @@
 package kr.pe.karsei.blogsearch.adapter.out;
 
-import kr.pe.karsei.blogsearch.config.annotation.Adapter;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
 import kr.pe.karsei.blogsearch.mapper.BlogKeywordMapper;
 import kr.pe.karsei.blogsearch.port.out.BlogKeywordApiLoadPort;
 import kr.pe.karsei.client.kakao.BlogApiClient;
 import kr.pe.karsei.client.kakao.dto.KakaoBlogSearch;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@Adapter
+@Component
 @RequiredArgsConstructor
 public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
     private final BlogApiClient blogApiClient;

@@ -1,20 +1,18 @@
 package kr.pe.karsei.blogsearch.adapter.out;
 
 import jakarta.persistence.EntityManager;
-import kr.pe.karsei.blogsearch.config.annotation.Adapter;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordCollectRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventSnapshotRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventStoreRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-@Slf4j
-@Adapter
+@Component
 @RequiredArgsConstructor
 public class BlogKeywordSchedulerAdapter {
     private final EntityManager entityManager;
