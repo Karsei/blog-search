@@ -7,6 +7,7 @@ import kr.pe.karsei.blogsearch.port.out.BlogKeywordCollectLoadPort;
 import kr.pe.karsei.blogsearch.port.out.BlogKeywordCollectSavePort;
 import kr.pe.karsei.blogsearch.port.out.EventSavePort;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordCollectRepository;
+import kr.pe.karsei.blogsearch.repository.BlogKeywordEventSnapshotRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventStoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -27,11 +28,7 @@ public class BlogKeywordJpaAdapter implements BlogKeywordCollectLoadPort, BlogKe
 
     @Override
     public void create(final String keyword) {
-        eventStoreRepository.save(new BlogKeywordEventStoreJpaEntity(
-                null,
-                keyword,
-                false,
-                null));
+        eventStoreRepository.save(new BlogKeywordEventStoreJpaEntity(null, keyword, null));
     }
 
     @Override
