@@ -22,7 +22,7 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class BlogKeywordJpaAdapterTest {
     @Mock
-    private BlogKeywordCountRepository collectRepository;
+    private BlogKeywordCountRepository countRepository;
     @Mock
     private BlogKeywordEventStoreRepository eventStoreRepository;
     @InjectMocks
@@ -34,7 +34,7 @@ class BlogKeywordJpaAdapterTest {
         int size = 10;
         List<BlogKeywordCountJpaEntity> list = new ArrayList<>();
         list.add(new BlogKeywordCountJpaEntity(1L, "한글날", 100, new Date()));
-        given(collectRepository.findAllByOrderByHitDesc(any(PageRequest.class))).willReturn(list);
+        given(countRepository.findAllByOrderByHitDesc(any(PageRequest.class))).willReturn(list);
 
         // when
         List<FetchBlogKeywordTop> result = adapter.findTopBlogKeywords(size);

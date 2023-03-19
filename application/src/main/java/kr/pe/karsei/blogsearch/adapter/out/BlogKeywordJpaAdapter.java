@@ -15,12 +15,12 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class BlogKeywordJpaAdapter implements BlogKeywordCountLoadPort, BlogKeywordEventSavePort {
-    private final BlogKeywordCountRepository collectRepository;
+    private final BlogKeywordCountRepository countRepository;
     private final BlogKeywordEventStoreRepository eventStoreRepository;
 
     @Override
     public List<FetchBlogKeywordTop> findTopBlogKeywords(final int size) {
-        List<BlogKeywordCountJpaEntity> list = collectRepository.findAllByOrderByHitDesc(PageRequest.of(0, size));
+        List<BlogKeywordCountJpaEntity> list = countRepository.findAllByOrderByHitDesc(PageRequest.of(0, size));
         return BlogKeywordMapper.mapSearchEntityListToDto(list);
     }
 

@@ -16,7 +16,7 @@ import java.util.List;
 public class BlogKeywordService implements BlogKeywordQueryUseCase {
     private final ApplicationEventPublisher eventPublisher;
     private final BlogKeywordApiLoadPort apiLoadPort;
-    private final BlogKeywordCountLoadPort collectLoadPort;
+    private final BlogKeywordCountLoadPort countLoadPort;
 
     @Override
     public FetchBlogKeyword.Info findBlog(final FetchBlogKeyword.Param param) {
@@ -29,6 +29,6 @@ public class BlogKeywordService implements BlogKeywordQueryUseCase {
 
     @Override
     public List<FetchBlogKeywordTop> findTopBlogKeywords(final int size) {
-        return collectLoadPort.findTopBlogKeywords(size);
+        return countLoadPort.findTopBlogKeywords(size);
     }
 }
