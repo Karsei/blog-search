@@ -14,7 +14,6 @@ public class BlogKeywordCollectEventHandler {
     @Async
     @EventListener
     public void handler(final BlogKeywordCollectEvent event) {
-        // TODO: 메시지 큐로 넘기면 좋겠지만... 우선은 DB 에 저장한다.
         eventSavePort.create(event.getKeyword());
     }
 }
