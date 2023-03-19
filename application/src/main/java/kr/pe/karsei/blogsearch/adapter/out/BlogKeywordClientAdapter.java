@@ -3,7 +3,7 @@ package kr.pe.karsei.blogsearch.adapter.out;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
 import kr.pe.karsei.blogsearch.mapper.BlogKeywordMapper;
 import kr.pe.karsei.blogsearch.port.out.BlogKeywordApiLoadPort;
-import kr.pe.karsei.client.kakao.BlogApiClient;
+import kr.pe.karsei.client.kakao.KakaoBlogApiClient;
 import kr.pe.karsei.client.kakao.dto.KakaoBlogSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
-    private final BlogApiClient blogApiClient;
+    private final KakaoBlogApiClient kakaoBlogApiClient;
 
     @Override
     public FetchBlogKeyword.Info searchBlog(final FetchBlogKeyword.Param params) {
@@ -20,6 +20,6 @@ public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
     }
 
     private KakaoBlogSearch.Info searchBlogWithKakao(final FetchBlogKeyword.Param params) {
-        return blogApiClient.searchBlog(BlogKeywordMapper.mapSearchParamToKakaoBlogSearchParam(params));
+        return kakaoBlogApiClient.searchBlog(BlogKeywordMapper.mapSearchParamToKakaoBlogSearchParam(params));
     }
 }
