@@ -21,10 +21,29 @@ public class FetchBlogKeyword {
 
         @Getter
         public static class Document {
+            /**
+             * 블로그의 이름
+             */
             private final String blogName;
+
+            /**
+             * 블로그 글 요약
+             */
             private final String contents;
+
+            /**
+             * 블로그 글 작성시간
+             */
             private final ZonedDateTime dateTime;
+
+            /**
+             * 블로그 글 제목
+             */
             private final String title;
+
+            /**
+             * 블로그 글 URL
+             */
             private final String url;
 
             @Builder
@@ -43,15 +62,19 @@ public class FetchBlogKeyword {
 
         @Getter
         public static class Meta {
-            private final boolean isEnd;
+            /**
+             * total_count 중 노출 가능 문서 수
+             */
             private final int pageableCount;
+
+            /**
+             * 검색된 문서 수
+             */
             private final int totalCount;
 
             @Builder
-            public Meta(final boolean isEnd,
-                        final int pageableCount,
+            public Meta(final int pageableCount,
                         final int totalCount) {
-                this.isEnd = isEnd;
                 this.pageableCount = pageableCount;
                 this.totalCount = totalCount;
             }
@@ -60,9 +83,24 @@ public class FetchBlogKeyword {
 
     @Getter
     public static class Param {
+        /**
+         * 검색을 원하는 질의어
+         */
         private final String query;
+
+        /**
+         * 결과 문서 정렬 방식
+         */
         private final Sort sort;
+
+        /**
+         * 결과 페이지 번호
+         */
         private final int page;
+
+        /**
+         * 한 페이지에 보여질 문서 수
+         */
         private final int size;
 
         @Builder
@@ -77,7 +115,15 @@ public class FetchBlogKeyword {
         }
 
         public enum Sort {
-            ACCURACY, RECENCY;
+            /**
+             * 정확도순
+             */
+            ACCURACY,
+
+            /**
+             * 최신순
+             */
+            RECENCY
         }
     }
 }

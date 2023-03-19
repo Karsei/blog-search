@@ -45,7 +45,6 @@ public abstract class BlogKeywordMapper {
                     .build());
         }
         FetchBlogKeyword.Info.Meta meta = FetchBlogKeyword.Info.Meta.builder()
-                .isEnd(kakaoSearchInfo.getMeta().isEnd())
                 .pageableCount(kakaoSearchInfo.getMeta().getPageableCount())
                 .totalCount(kakaoSearchInfo.getMeta().getTotalCount())
                 .build();
