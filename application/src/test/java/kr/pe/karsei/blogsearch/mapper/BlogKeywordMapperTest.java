@@ -4,11 +4,13 @@ import kr.pe.karsei.blogsearch.entity.BlogKeywordCountJpaEntity;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeywordTop;
 import kr.pe.karsei.client.kakao.dto.KakaoBlogSearch;
+import kr.pe.karsei.client.naver.dto.NaverBlogSearch;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -150,5 +152,115 @@ class BlogKeywordMapperTest {
         assertThat(result.get(0).getHit()).isEqualTo(entities.get(0).getHit());
         assertThat(result.get(1).getKeyword()).isEqualTo(entities.get(1).getKeyword());
         assertThat(result.get(1).getHit()).isEqualTo(entities.get(1).getHit());
+    }
+
+    @Test
+    void testMappingSearchParamToNaverBlogSearchParamWithNoSort() {
+        // given
+        Pageable pageable = PageRequest.of(1, 10);
+        String query = "한글날";
+
+        // when
+        NaverBlogSearch.Param param = BlogKeywordMapper.mapSearchParamToNaverBlogSearchParam(pageable, query);
+
+        // then
+        assertThat(param).isNotNull();
+        assertThat(param.getQuery()).isNotBlank();
+        assertThat(param.getSort()).isNotNull();
+        assertThat(param.getSort()).isEqualTo(NaverBlogSearch.Param.Sort.SIM);
+        assertThat(param.getStart()).isEqualTo(1);
+        assertThat(param.getDisplay()).isEqualTo(10);
+    }
+
+    @Test
+    void testMappingSearchParamToNaverBlogSearchParamWithAccuracySort() {
+        // given
+        Pageable pageable = PageRequest.of(1, 10, Sort.by("accuracy"));
+        String query = "한글날";
+
+        // when
+        NaverBlogSearch.Param param = BlogKeywordMapper.mapSearchParamToNaverBlogSearchParam(pageable, query);
+
+        // then
+        assertThat(param).isNotNull();
+        assertThat(param.getQuery()).isNotBlank();
+        assertThat(param.getSort()).isNotNull();
+        assertThat(param.getSort()).isEqualTo(NaverBlogSearch.Param.Sort.SIM);
+        assertThat(param.getStart()).isEqualTo(1);
+        assertThat(param.getDisplay()).isEqualTo(10);
+    }
+
+    @Test
+    void testMappingSearchParamToNaverBlogSearchParamWithRecencySort() {
+        // given
+        Pageable pageable = PageRequest.of(1, 10, Sort.by("recency"));
+        String query = "한글날";
+
+        // when
+        NaverBlogSearch.Param param = BlogKeywordMapper.mapSearchParamToNaverBlogSearchParam(pageable, query);
+
+        // then
+        assertThat(param).isNotNull();
+        assertThat(param.getQuery()).isNotBlank();
+        assertThat(param.getSort()).isNotNull();
+        assertThat(param.getSort()).isEqualTo(NaverBlogSearch.Param.Sort.DATE);
+        assertThat(param.getStart()).isEqualTo(1);
+        assertThat(param.getDisplay()).isEqualTo(10);
+    }
+
+    @Test
+    void testMappingSearchParamToNaverBlogSearchParamWithInvalidSort() {
+        // given
+        Pageable pageable = PageRequest.of(1, 10, Sort.by("asdf"));
+        String query = "한글날";
+
+        // when
+        NaverBlogSearch.Param param = BlogKeywordMapper.mapSearchParamToNaverBlogSearchParam(pageable, query);
+
+        // then
+        assertThat(param).isNotNull();
+        assertThat(param.getQuery()).isNotBlank();
+        assertThat(param.getSort()).isNotNull();
+        assertThat(param.getSort()).isEqualTo(NaverBlogSearch.Param.Sort.DATE);
+        assertThat(param.getStart()).isEqualTo(1);
+        assertThat(param.getDisplay()).isEqualTo(10);
+    }
+
+    @Test
+    void testMappingNaverBlogSearchToSearchBlogInfo() {
+        // given
+        String sort = "accuracy";
+        Pageable pageable = PageRequest.of(1, 10, Sort.by(sort));
+
+        List<NaverBlogSearch.Info.Item> documents = new ArrayList<>();
+        documents.add(NaverBlogSearch.Info.Item.builder()
+                .bloggerName("주말엔아빠여행사")
+                .description("<b>한글날</b>에 한글박물관을 가보는게 나름 의미있었습니다. 물론 아직 다 이해하고 얻어갈 수준의 아이들은 아니지만 저는 언제나 그렇듯 “나 예전에 여기 와본 적 있는데!” 정도만 기억해주는 것도 충분하다는... ")
+                .dateTime(LocalDate.of(2022, 11, 7))
+                .title("서울 용산 / 2022년 <b>한글날</b> 국립한글박물관 방문")
+                .link("https://blog.naver.com/nadongyup/222922559695")
+                .build());
+        NaverBlogSearch.Info info = NaverBlogSearch.Info.builder()
+                .items(documents)
+                .total(333470)
+                .display(10)
+                .build();
+
+        // when
+        FetchBlogKeyword result = BlogKeywordMapper.mapNaverBlogSearchToSearchBlogInfo(pageable, info);
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getDocuments()).isNotNull();
+        assertThat(result.getDocuments()).hasSize(1);
+        assertThat(result.getDocuments().get(0).getBlogName()).isEqualTo(documents.get(0).getBloggerName());
+        assertThat(result.getDocuments().get(0).getContents()).isEqualTo(documents.get(0).getDescription());
+        assertThat(result.getDocuments().get(0).getDateTime()).isEqualTo(documents.get(0).getDateTime().atStartOfDay().atZone(ZoneId.of("Asia/Seoul")));
+        assertThat(result.getDocuments().get(0).getTitle()).isEqualTo(documents.get(0).getTitle());
+        assertThat(result.getDocuments().get(0).getUrl()).isEqualTo(documents.get(0).getLink());
+        assertThat(result.getPagination()).isNotNull();
+        assertThat(result.getPagination().getPage()).isEqualTo(pageable.getPageNumber());
+        assertThat(result.getPagination().getSize()).isEqualTo(pageable.getPageSize());
+        assertThat(result.getPagination().getTotalCount()).isEqualTo(info.getTotal());
     }
 }
