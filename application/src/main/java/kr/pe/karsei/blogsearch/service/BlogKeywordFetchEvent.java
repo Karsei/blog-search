@@ -6,7 +6,7 @@ import lombok.Getter;
 public class BlogKeywordFetchEvent {
     private final String keyword;
 
-    public BlogKeywordFetchEvent(String keyword) {
+    public BlogKeywordFetchEvent(final String keyword) {
         this.keyword = keyword;
     }
 }
