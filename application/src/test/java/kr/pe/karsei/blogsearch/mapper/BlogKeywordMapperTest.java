@@ -221,7 +221,7 @@ class BlogKeywordMapperTest {
         assertThat(param).isNotNull();
         assertThat(param.getQuery()).isNotBlank();
         assertThat(param.getSort()).isNotNull();
-        assertThat(param.getSort()).isEqualTo(NaverBlogSearch.Param.Sort.DATE);
+        assertThat(param.getSort()).isEqualTo(NaverBlogSearch.Param.Sort.SIM);
         assertThat(param.getStart()).isEqualTo(1);
         assertThat(param.getDisplay()).isEqualTo(10);
     }
