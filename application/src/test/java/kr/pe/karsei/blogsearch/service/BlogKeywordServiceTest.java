@@ -56,7 +56,7 @@ class BlogKeywordServiceTest {
                 .documents(documents)
                 .pagination(pagination)
                 .build();
-        given(apiLoadPort.search(any(Pageable.class), anyString())).willReturn(info);
+        given(apiLoadPort.searchWithKakao(any(Pageable.class), anyString())).willReturn(info);
 
         // when
         FetchBlogKeyword result = blogKeywordService.findBlog(pageable, query);

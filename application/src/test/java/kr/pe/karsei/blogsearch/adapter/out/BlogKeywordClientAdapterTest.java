@@ -1,10 +1,10 @@
 package kr.pe.karsei.blogsearch.adapter.out;
 
-import feign.FeignException;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
-import kr.pe.karsei.blogsearch.exception.BlogKeywordException;
 import kr.pe.karsei.client.kakao.KakaoBlogApiClient;
 import kr.pe.karsei.client.kakao.dto.KakaoBlogSearch;
+import kr.pe.karsei.client.naver.NaverBlogApiClient;
+import kr.pe.karsei.client.naver.dto.NaverBlogSearch;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -27,11 +28,13 @@ import static org.mockito.BDDMockito.given;
 class BlogKeywordClientAdapterTest {
     @Mock
     private KakaoBlogApiClient kakaoBlogApiClient;
+    @Mock
+    private NaverBlogApiClient naverBlogApiClient;
     @InjectMocks
     private BlogKeywordClientAdapter clientAdapter;
 
     @Test
-    void testIfSearchCanBeCalled() {
+    void testIfKakaoSearchCanBeCalled() {
         // given
         String query = "한글날";
         String sort = "accuracy";
@@ -57,7 +60,7 @@ class BlogKeywordClientAdapterTest {
         given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willReturn(info);
 
         // when
-        FetchBlogKeyword result = clientAdapter.search(pageable, query);
+        FetchBlogKeyword result = clientAdapter.searchWithKakao(pageable, query);
 
         // then
         assertThat(result).isNotNull();
@@ -75,41 +78,66 @@ class BlogKeywordClientAdapterTest {
     }
 
     @Test
-    void testIfSearchCanCallArgumentException() {
+    void testIfKakaoSearchCanCallRuntimeException() {
         // given
         String query = "한글날";
         Pageable pageable = PageRequest.of(1, 1000, Sort.by("accuracy"));
-        given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willThrow(FeignException.FeignClientException.class);
-
-        // when & then
-        assertThatThrownBy(() -> clientAdapter.search(pageable, query))
-                .isInstanceOf(BlogKeywordException.class)
-                .hasMessageContaining("요청이 잘못되었습니다.");
-    }
-
-    @Test
-    void testIfSearchCanCallServerException() {
-        // given
-        String query = "한글날";
-        Pageable pageable = PageRequest.of(1, 10, Sort.by("accuracy"));
-        given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willThrow(FeignException.FeignServerException.class);
-
-        // when & then
-        assertThatThrownBy(() -> clientAdapter.search(pageable, query))
-                .isInstanceOf(BlogKeywordException.class)
-                .hasMessageContaining("원격 API 서버에서 오류가 발생했습니다.");
-    }
-
-    @Test
-    void testIfSearchCanCallUnknownException() {
-        // given
-        String query = "한글날";
-        Pageable pageable = PageRequest.of(1, 10, Sort.by("accuracy"));
         given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willThrow(RuntimeException.class);
 
         // when & then
-        assertThatThrownBy(() -> clientAdapter.search(pageable, query))
-                .isInstanceOf(BlogKeywordException.class)
-                .hasMessageContaining("알 수 없는 오류입니다.");
+        assertThatThrownBy(() -> clientAdapter.searchWithKakao(pageable, query))
+                .isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    void testIfNaverSearchCanBeCalled() {
+        // given
+        String query = "한글날";
+        String sort = "accuracy";
+        Pageable pageable = PageRequest.of(1, 10, Sort.by(sort));
+
+        List<NaverBlogSearch.Info.Item> documents = new ArrayList<>();
+        documents.add(NaverBlogSearch.Info.Item.builder()
+                .bloggerName("주말엔아빠여행사")
+                .description("<b>한글날</b>에 한글박물관을 가보는게 나름 의미있었습니다. 물론 아직 다 이해하고 얻어갈 수준의 아이들은 아니지만 저는 언제나 그렇듯 “나 예전에 여기 와본 적 있는데!” 정도만 기억해주는 것도 충분하다는... ")
+                .dateTime(LocalDate.of(2022, 10, 8))
+                .title("서울 용산 / 2022년 <b>한글날</b> 국립한글박물관 방문")
+                .link("https://blog.naver.com/nadongyup/222922559695")
+                .build());
+        NaverBlogSearch.Info info = NaverBlogSearch.Info.builder()
+                .items(documents)
+                .display(10)
+                .total(333470)
+                .build();
+        given(naverBlogApiClient.search(any(NaverBlogSearch.Param.class))).willReturn(info);
+
+        // when
+        FetchBlogKeyword result = clientAdapter.searchWithNaver(pageable, query);
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getDocuments()).isNotNull();
+        assertThat(result.getDocuments()).hasSize(1);
+        assertThat(result.getDocuments().get(0).getBlogName()).isEqualTo(documents.get(0).getBloggerName());
+        assertThat(result.getDocuments().get(0).getContents()).isEqualTo(documents.get(0).getDescription());
+        assertThat(result.getDocuments().get(0).getDateTime()).isEqualTo(documents.get(0).getDateTime().atStartOfDay().atZone(ZoneId.of("Asia/Seoul")));
+        assertThat(result.getDocuments().get(0).getTitle()).isEqualTo(documents.get(0).getTitle());
+        assertThat(result.getDocuments().get(0).getUrl()).isEqualTo(documents.get(0).getLink());
+        assertThat(result.getPagination()).isNotNull();
+        assertThat(result.getPagination().getPage()).isEqualTo(pageable.getPageNumber());
+        assertThat(result.getPagination().getSize()).isEqualTo(pageable.getPageSize());
+        assertThat(result.getPagination().getTotalCount()).isEqualTo(info.getTotal());
+    }
+
+    @Test
+    void testIfNaverSearchCanCallRuntimeException() {
+        // given
+        String query = "한글날";
+        Pageable pageable = PageRequest.of(1, 1000, Sort.by("accuracy"));
+        given(naverBlogApiClient.search(any(NaverBlogSearch.Param.class))).willThrow(RuntimeException.class);
+
+        // when & then
+        assertThatThrownBy(() -> clientAdapter.searchWithNaver(pageable, query))
+                .isInstanceOf(RuntimeException.class);
     }
 }
