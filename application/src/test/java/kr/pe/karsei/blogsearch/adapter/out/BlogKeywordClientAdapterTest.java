@@ -1,6 +1,8 @@
 package kr.pe.karsei.blogsearch.adapter.out;
 
+import feign.FeignException;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
+import kr.pe.karsei.blogsearch.exception.BlogKeywordException;
 import kr.pe.karsei.client.kakao.KakaoBlogApiClient;
 import kr.pe.karsei.client.kakao.dto.KakaoBlogSearch;
 import org.junit.jupiter.api.Test;
@@ -17,7 +19,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -68,5 +70,44 @@ class BlogKeywordClientAdapterTest {
         assertThat(result.getMeta()).isNotNull();
         assertThat(result.getMeta().getPageableCount()).isEqualTo(meta.getPageableCount());
         assertThat(result.getMeta().getTotalCount()).isEqualTo(meta.getTotalCount());
+    }
+
+    @Test
+    void testIfSearchCanCallArgumentException() {
+        // given
+        String query = "한글날";
+        Pageable pageable = PageRequest.of(1, 1000, Sort.by("accuracy"));
+        given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willThrow(FeignException.FeignClientException.class);
+
+        // when & then
+        assertThatThrownBy(() -> clientAdapter.searchBlog(pageable, query))
+                .isInstanceOf(BlogKeywordException.class)
+                .hasMessageContaining("요청이 잘못되었습니다.");
+    }
+
+    @Test
+    void testIfSearchCanCallServerException() {
+        // given
+        String query = "한글날";
+        Pageable pageable = PageRequest.of(1, 10, Sort.by("accuracy"));
+        given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willThrow(FeignException.FeignServerException.class);
+
+        // when & then
+        assertThatThrownBy(() -> clientAdapter.searchBlog(pageable, query))
+                .isInstanceOf(BlogKeywordException.class)
+                .hasMessageContaining("원격 API 서버에서 오류가 발생했습니다.");
+    }
+
+    @Test
+    void testIfSearchCanCallUnknownException() {
+        // given
+        String query = "한글날";
+        Pageable pageable = PageRequest.of(1, 10, Sort.by("accuracy"));
+        given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willThrow(RuntimeException.class);
+
+        // when & then
+        assertThatThrownBy(() -> clientAdapter.searchBlog(pageable, query))
+                .isInstanceOf(BlogKeywordException.class)
+                .hasMessageContaining("알 수 없는 오류입니다.");
     }
 }
