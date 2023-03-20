@@ -26,7 +26,7 @@ public abstract class BlogKeywordMapper {
                             default -> KakaoBlogSearch.Param.Sort.ACCURACY;
                         })
                         .orElse(KakaoBlogSearch.Param.Sort.ACCURACY))
-                .page((int) pageable.getOffset())
+                .page(pageable.getPageNumber())
                 .size(pageable.getPageSize())
                 .build();
     }
