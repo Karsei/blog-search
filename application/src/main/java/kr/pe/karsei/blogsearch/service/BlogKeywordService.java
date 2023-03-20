@@ -24,7 +24,7 @@ public class BlogKeywordService implements BlogKeywordQueryUseCase {
         // 조회
         FetchBlogKeyword info = apiLoadPort.searchBlog(pageable, query);
         // 검색 키워드 이벤트 발행
-        eventPublisher.publishEvent(new BlogKeywordCountEvent(query));
+        eventPublisher.publishEvent(new BlogKeywordFetchEvent(query));
         return info;
     }
 

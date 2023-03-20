@@ -3,10 +3,10 @@ package kr.pe.karsei.blogsearch.service;
 import lombok.Getter;
 
 @Getter
-public class BlogKeywordCountEvent {
+public class BlogKeywordFetchEvent {
     private final String keyword;
 
-    public BlogKeywordCountEvent(String keyword) {
+    public BlogKeywordFetchEvent(String keyword) {
         this.keyword = keyword;
     }
 }

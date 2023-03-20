@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class BlogKeywordCountEventHandler {
+public class BlogKeywordFetchEventHandler {
     private final BlogKeywordEventSavePort eventSavePort;
 
     @Async
     @EventListener
-    public void handler(final BlogKeywordCountEvent event) {
+    public void handler(final BlogKeywordFetchEvent event) {
         eventSavePort.create(event.getKeyword());
     }
 }
