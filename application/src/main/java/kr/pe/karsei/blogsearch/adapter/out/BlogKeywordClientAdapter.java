@@ -1,5 +1,6 @@
 package kr.pe.karsei.blogsearch.adapter.out;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
 import kr.pe.karsei.blogsearch.mapper.BlogKeywordMapper;
 import kr.pe.karsei.blogsearch.port.out.BlogKeywordApiLoadPort;
@@ -17,6 +18,7 @@ public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
     private final KakaoBlogApiClient kakaoBlogApiClient;
     private final NaverBlogApiClient naverBlogApiClient;
 
+    @CircuitBreaker(name = "blogSearch", fallbackMethod = "searchWithNaverForFallback")
     @Override
     public FetchBlogKeyword searchWithKakao(final Pageable pageable, final String query) {
         KakaoBlogSearch.Info info = kakaoBlogApiClient.search(BlogKeywordMapper.mapSearchParamToKakaoBlogSearchParam(pageable, query));
@@ -27,5 +29,9 @@ public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
     public FetchBlogKeyword searchWithNaver(final Pageable pageable, final String query) {
         NaverBlogSearch.Info info = naverBlogApiClient.search(BlogKeywordMapper.mapSearchParamToNaverBlogSearchParam(pageable, query));
         return BlogKeywordMapper.mapNaverBlogSearchToSearchBlogInfo(pageable, info);
+    }
+
+    private FetchBlogKeyword searchWithNaverForFallback(final Pageable pageable, final String query, Throwable ex) {
+        return searchWithNaver(pageable, query);
     }
 }
