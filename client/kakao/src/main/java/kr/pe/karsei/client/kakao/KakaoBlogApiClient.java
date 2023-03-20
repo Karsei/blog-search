@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "kakaoBlogApiClient", url = "https://dapi.kakao.com", primary = false, configuration = KakaoClientFeignConfiguration.class)
+@FeignClient(name = "kakaoBlogApiClient", url = "${client.kakao.url}", primary = false, configuration = KakaoClientFeignConfiguration.class)
 public interface KakaoBlogApiClient {
     /**
      * 카카오의 블로그를 검색합니다.

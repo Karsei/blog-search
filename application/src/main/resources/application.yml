@@ -9,3 +9,12 @@ spring:
   h2:
     console:
       enabled: true
+
+client:
+  kakao:
+    url: https://dapi.kakao.com
+    api-key: ""
+  naver:
+    url: https://openapi.naver.com
+    api-id: ""
+    api-secret: ""
