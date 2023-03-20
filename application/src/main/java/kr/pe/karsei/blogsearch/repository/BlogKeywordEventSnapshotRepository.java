@@ -1,6 +1,6 @@
 package kr.pe.karsei.blogsearch.repository;
 
-import kr.pe.karsei.blogsearch.adapter.out.BlogKeywordEventSnapshotJpaEntity;
+import kr.pe.karsei.blogsearch.entity.BlogKeywordEventSnapshotJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

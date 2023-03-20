@@ -1,4 +1,4 @@
-package kr.pe.karsei.blogsearch.adapter.out;
+package kr.pe.karsei.blogsearch.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

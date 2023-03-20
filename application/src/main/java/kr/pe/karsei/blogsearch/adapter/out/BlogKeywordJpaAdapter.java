@@ -1,6 +1,8 @@
 package kr.pe.karsei.blogsearch.adapter.out;
 
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeywordTop;
+import kr.pe.karsei.blogsearch.entity.BlogKeywordCountJpaEntity;
+import kr.pe.karsei.blogsearch.entity.BlogKeywordEventStoreJpaEntity;
 import kr.pe.karsei.blogsearch.mapper.BlogKeywordMapper;
 import kr.pe.karsei.blogsearch.port.out.BlogKeywordCountLoadPort;
 import kr.pe.karsei.blogsearch.port.out.BlogKeywordEventSavePort;

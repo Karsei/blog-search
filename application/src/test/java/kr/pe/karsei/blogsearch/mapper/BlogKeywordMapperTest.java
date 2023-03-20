@@ -1,6 +1,6 @@
 package kr.pe.karsei.blogsearch.mapper;
 
-import kr.pe.karsei.blogsearch.adapter.out.BlogKeywordCountJpaEntity;
+import kr.pe.karsei.blogsearch.entity.BlogKeywordCountJpaEntity;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeywordTop;
 import kr.pe.karsei.client.kakao.dto.KakaoBlogSearch;

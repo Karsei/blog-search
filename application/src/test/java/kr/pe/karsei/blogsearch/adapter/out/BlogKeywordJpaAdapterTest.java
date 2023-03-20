@@ -1,6 +1,7 @@
 package kr.pe.karsei.blogsearch.adapter.out;
 
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeywordTop;
+import kr.pe.karsei.blogsearch.entity.BlogKeywordCountJpaEntity;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordCountRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventStoreRepository;
 import org.junit.jupiter.api.Test;

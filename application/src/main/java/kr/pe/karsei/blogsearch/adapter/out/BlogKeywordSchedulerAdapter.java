@@ -1,6 +1,9 @@
 package kr.pe.karsei.blogsearch.adapter.out;
 
 import jakarta.persistence.EntityManager;
+import kr.pe.karsei.blogsearch.entity.BlogKeywordCountJpaEntity;
+import kr.pe.karsei.blogsearch.entity.BlogKeywordEventSnapshotJpaEntity;
+import kr.pe.karsei.blogsearch.entity.BlogKeywordEventStoreJpaEntity;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordCountRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventSnapshotRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventStoreRepository;

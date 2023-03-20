@@ -1,6 +1,6 @@
 package kr.pe.karsei.blogsearch.repository;
 
-import kr.pe.karsei.blogsearch.adapter.out.BlogKeywordCountJpaEntity;
+import kr.pe.karsei.blogsearch.entity.BlogKeywordCountJpaEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
