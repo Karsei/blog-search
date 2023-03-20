@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
     id 'org.springframework.boot' version '3.0.4'
     id 'io.spring.dependency-management' version '1.1.0'
 }
@@ -23,18 +23,12 @@ dependencies {
 
     // Spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    // H2
-    runtimeOnly 'com.h2database:h2'
+    // Feign
+    api 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    // Multi-module
-    implementation(project(':client:kakao'))
-    implementation(project(':client:naver'))
 }
 
 dependencyManagement {
@@ -46,3 +40,8 @@ dependencyManagement {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+bootJar {
+    enabled(false)
+}
+jar.enabled(true)

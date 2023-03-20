@@ -1,3 +1,4 @@
 rootProject.name = 'blog-search'
 include 'application',
-        'client:kakao'
+        'client:kakao',
+        'client:naver'
