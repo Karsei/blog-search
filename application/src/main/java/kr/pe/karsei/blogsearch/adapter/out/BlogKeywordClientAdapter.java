@@ -6,6 +6,7 @@ import kr.pe.karsei.blogsearch.port.out.BlogKeywordApiLoadPort;
 import kr.pe.karsei.client.kakao.KakaoBlogApiClient;
 import kr.pe.karsei.client.kakao.dto.KakaoBlogSearch;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,12 +15,12 @@ public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
     private final KakaoBlogApiClient kakaoBlogApiClient;
 
     @Override
-    public FetchBlogKeyword.Info searchBlog(final FetchBlogKeyword.Param params) {
-        KakaoBlogSearch.Info kakaoBlogSearch = searchBlogWithKakao(params);
+    public FetchBlogKeyword searchBlog(final Pageable pageable, final String query) {
+        KakaoBlogSearch.Info kakaoBlogSearch = searchBlogWithKakao(pageable, query);
         return BlogKeywordMapper.mapKakaoBlogSearchToSearchBlogInfo(kakaoBlogSearch);
     }
 
-    private KakaoBlogSearch.Info searchBlogWithKakao(final FetchBlogKeyword.Param params) {
-        return kakaoBlogApiClient.search(BlogKeywordMapper.mapSearchParamToKakaoBlogSearchParam(params));
+    private KakaoBlogSearch.Info searchBlogWithKakao(final Pageable pageable, final String query) {
+        return kakaoBlogApiClient.search(BlogKeywordMapper.mapSearchParamToKakaoBlogSearchParam(pageable, query));
     }
 }

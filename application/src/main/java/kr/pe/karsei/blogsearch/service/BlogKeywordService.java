@@ -7,6 +7,7 @@ import kr.pe.karsei.blogsearch.port.out.BlogKeywordApiLoadPort;
 import kr.pe.karsei.blogsearch.port.out.BlogKeywordCountLoadPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,11 +20,11 @@ public class BlogKeywordService implements BlogKeywordQueryUseCase {
     private final BlogKeywordCountLoadPort countLoadPort;
 
     @Override
-    public FetchBlogKeyword.Info findBlog(final FetchBlogKeyword.Param param) {
+    public FetchBlogKeyword findBlog(final Pageable pageable, final String query) {
         // 조회
-        FetchBlogKeyword.Info info = apiLoadPort.searchBlog(param);
+        FetchBlogKeyword info = apiLoadPort.searchBlog(pageable, query);
         // 검색 키워드 이벤트 발행
-        eventPublisher.publishEvent(new BlogKeywordCountEvent(param.getQuery()));
+        eventPublisher.publishEvent(new BlogKeywordCountEvent(query));
         return info;
     }
 

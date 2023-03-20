@@ -10,6 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -17,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,31 +37,27 @@ class BlogKeywordServiceTest {
     @Test
     void testIfFindingBlogCanBeCalled() {
         // given
-        FetchBlogKeyword.Param param = FetchBlogKeyword.Param.builder()
-                .query("한글날")
-                .sort(FetchBlogKeyword.Param.Sort.ACCURACY)
-                .page(1)
-                .size(1)
-                .build();
+        String query = "한글날";
+        Pageable pageable = PageRequest.of(1, 10, Sort.by("accuracy"));
 
-        List<FetchBlogKeyword.Info.Document> documents = new ArrayList<>();
-        documents.add(FetchBlogKeyword.Info.Document.builder()
+        List<FetchBlogKeyword.Document> documents = new ArrayList<>();
+        documents.add(FetchBlogKeyword.Document.builder()
                 .blogName("너무나도어렵네")
                 .contents("<b>한글날</b> 공휴일 추가수당에 대해 알아보도록 하겠습니다. 이 게시물을 전체적으로 읽어주시면 <b>한글날</b> 공휴일 추가수당을 알아두시는 데에 보탬이 될 것입니다. <b>한글날</b> 공휴일 추가수당의 정보가 필요하다면 전체 다 읽어주세요. 이제 밑에서 <b>한글날</b> 공휴일 추가수당을 알려드리겠습니다. <b>한글날</b> 공휴일 추가수당 통풍에...")
                 .dateTime(ZonedDateTime.of(2023, 2, 19, 22, 4, 34, 0, ZoneId.of("Asia/Seoul")))
                 .build());
-        FetchBlogKeyword.Info.Meta meta = FetchBlogKeyword.Info.Meta.builder()
+        FetchBlogKeyword.Meta meta = FetchBlogKeyword.Meta.builder()
                 .pageableCount(800)
                 .totalCount(346401)
                 .build();
-        FetchBlogKeyword.Info info = FetchBlogKeyword.Info.builder()
+        FetchBlogKeyword info = FetchBlogKeyword.builder()
                 .documents(documents)
                 .meta(meta)
                 .build();
-        given(apiLoadPort.searchBlog(any(FetchBlogKeyword.Param.class))).willReturn(info);
+        given(apiLoadPort.searchBlog(any(Pageable.class), anyString())).willReturn(info);
 
         // when
-        FetchBlogKeyword.Info result = blogKeywordService.findBlog(param);
+        FetchBlogKeyword result = blogKeywordService.findBlog(pageable, query);
 
         // then
         assertThat(result).isNotNull();

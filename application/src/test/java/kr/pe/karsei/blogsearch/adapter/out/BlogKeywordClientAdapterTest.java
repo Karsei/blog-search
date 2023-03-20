@@ -8,6 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -28,12 +31,8 @@ class BlogKeywordClientAdapterTest {
     @Test
     void testIfSearchCanBeCalled() {
         // given
-        FetchBlogKeyword.Param param = FetchBlogKeyword.Param.builder()
-                .query("한글날")
-                .sort(FetchBlogKeyword.Param.Sort.ACCURACY)
-                .page(1)
-                .size(1)
-                .build();
+        String query = "한글날";
+        Pageable pageable = PageRequest.of(1, 10, Sort.by("accuracy"));
 
         List<KakaoBlogSearch.Info.Document> documents = new ArrayList<>();
         documents.add(KakaoBlogSearch.Info.Document.builder()
@@ -55,7 +54,7 @@ class BlogKeywordClientAdapterTest {
         given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willReturn(info);
 
         // when
-        FetchBlogKeyword.Info result = clientAdapter.searchBlog(param);
+        FetchBlogKeyword result = clientAdapter.searchBlog(pageable, query);
 
         // then
         assertThat(result).isNotNull();

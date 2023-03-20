@@ -3,12 +3,12 @@ package kr.pe.karsei.blogsearch.adapter.in;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
-import kr.pe.karsei.blogsearch.dto.RequestBlogKeyword;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeywordTop;
-import kr.pe.karsei.blogsearch.mapper.BlogKeywordMapper;
 import kr.pe.karsei.blogsearch.port.in.BlogKeywordQueryUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +24,14 @@ public class BlogKeywordController {
 
     /**
      * 블로그를 검색합니다.
-     * @param request 파라미터
+     * @param query 질의할 단어
+     * @param pageable 페이징
      * @return 블로그 검색 결과
      */
     @GetMapping("search")
-    public ResponseEntity<FetchBlogKeyword.Info> search(
-            @ModelAttribute @Valid final RequestBlogKeyword request) {
-        FetchBlogKeyword.Info info = queryUseCase.findBlog(BlogKeywordMapper.mapRequestToParam(request));
+    public ResponseEntity<FetchBlogKeyword> search(@RequestParam final String query,
+                                                   @PageableDefault(page = 1, size = 10, sort = {"accuracy"}) final Pageable pageable) {
+        FetchBlogKeyword info = queryUseCase.findBlog(pageable, query);
         return ResponseEntity.ok(info);
     }
 
