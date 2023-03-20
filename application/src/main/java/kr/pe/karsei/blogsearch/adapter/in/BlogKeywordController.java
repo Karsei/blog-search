@@ -34,7 +34,7 @@ public class BlogKeywordController {
     @GetMapping("search")
     public ResponseEntity<FetchBlogKeyword> search(
             @RequestParam @Valid @NotBlank final String query,
-            @RequestParam(required = false, defaultValue = "1") @Valid @Positive @Max(10) final int page,
+            @RequestParam(required = false, defaultValue = "1") @Valid @Positive @Max(50) final int page,
             @RequestParam(required = false, defaultValue = "10") @Valid @Positive @Max(50) final int size,
             @RequestParam(required = false, defaultValue = "accuracy") @Valid @NotBlank final String sort) {
         FetchBlogKeyword info = queryUseCase.findBlog(PageRequest.of(page, size, Sort.by(sort)), query);
