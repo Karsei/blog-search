@@ -52,7 +52,7 @@ public abstract class BlogKeywordMapper {
                 .build();
     }
 
-    public static List<FetchBlogKeywordTop> mapSearchEntityListToDto(final List<BlogKeywordCountJpaEntity> entities) {
+    public static List<FetchBlogKeywordTop> mapCountEntityListToDto(final List<BlogKeywordCountJpaEntity> entities) {
         return entities.stream()
                 .map(e -> new FetchBlogKeywordTop(e.getKeyword(), e.getHit()))
                 .collect(Collectors.toList());

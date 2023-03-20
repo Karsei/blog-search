@@ -21,7 +21,7 @@ public class BlogKeywordJpaAdapter implements BlogKeywordCountLoadPort, BlogKeyw
     @Override
     public List<FetchBlogKeywordTop> findTopBlogKeywords(final int size) {
         List<BlogKeywordCountJpaEntity> list = countRepository.findAllByOrderByHitDesc(PageRequest.of(0, size));
-        return BlogKeywordMapper.mapSearchEntityListToDto(list);
+        return BlogKeywordMapper.mapCountEntityListToDto(list);
     }
 
     @Override
