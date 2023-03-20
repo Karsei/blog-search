@@ -1,12 +1,12 @@
 package kr.pe.karsei.blogsearch.mapper;
 
 import kr.pe.karsei.blogsearch.adapter.out.BlogKeywordCountJpaEntity;
-import kr.pe.karsei.blogsearch.dto.RequestBlogKeyword;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeywordTop;
 import kr.pe.karsei.client.kakao.dto.KakaoBlogSearch;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,34 +14,27 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class BlogKeywordMapper {
-    public static FetchBlogKeyword.Param mapRequestToParam(RequestBlogKeyword request) {
-        return FetchBlogKeyword.Param.builder()
-                .query(request.getQuery())
-                .sort(request.getSort())
-                .page(request.getPage())
-                .size(request.getSize())
-                .build();
-    }
-
-    public static List<FetchBlogKeywordTop> mapSearchEntityListToDto(List<BlogKeywordCountJpaEntity> entities) {
-        return entities.stream()
-                .map(e -> new FetchBlogKeywordTop(e.getKeyword(), e.getHit()))
-                .collect(Collectors.toList());
-    }
-
-    public static KakaoBlogSearch.Param mapSearchParamToKakaoBlogSearchParam(FetchBlogKeyword.Param params) {
+    public static KakaoBlogSearch.Param mapSearchParamToKakaoBlogSearchParam(final Pageable pageable, final String query) {
         return KakaoBlogSearch.Param.builder()
-                .query(params.getQuery())
-                .sort(KakaoBlogSearch.Param.Sort.valueOf(params.getSort().name()))
-                .page(params.getPage())
-                .size(params.getSize())
+                .query(query)
+                .sort(pageable.getSort()
+                        .stream()
+                        .findFirst()
+                        .map(o -> switch (o.getProperty()) {
+                            case "accuracy" -> KakaoBlogSearch.Param.Sort.ACCURACY;
+                            case "recency" -> KakaoBlogSearch.Param.Sort.RECENCY;
+                            default -> KakaoBlogSearch.Param.Sort.ACCURACY;
+                        })
+                        .orElse(KakaoBlogSearch.Param.Sort.ACCURACY))
+                .page((int) pageable.getOffset())
+                .size(pageable.getPageSize())
                 .build();
     }
 
-    public static FetchBlogKeyword.Info mapKakaoBlogSearchToSearchBlogInfo(KakaoBlogSearch.Info kakaoSearchInfo) {
-        List<FetchBlogKeyword.Info.Document> documents = new ArrayList<>();
+    public static FetchBlogKeyword mapKakaoBlogSearchToSearchBlogInfo(final KakaoBlogSearch.Info kakaoSearchInfo) {
+        List<FetchBlogKeyword.Document> documents = new ArrayList<>();
         for (KakaoBlogSearch.Info.Document document : kakaoSearchInfo.getDocuments()) {
-            documents.add(FetchBlogKeyword.Info.Document.builder()
+            documents.add(FetchBlogKeyword.Document.builder()
                     .blogName(document.getBlogName())
                     .contents(document.getContents())
                     .dateTime(document.getDateTime())
@@ -49,13 +42,19 @@ public abstract class BlogKeywordMapper {
                     .url(document.getUrl())
                     .build());
         }
-        FetchBlogKeyword.Info.Meta meta = FetchBlogKeyword.Info.Meta.builder()
+        FetchBlogKeyword.Meta meta = FetchBlogKeyword.Meta.builder()
                 .pageableCount(kakaoSearchInfo.getMeta().getPageableCount())
                 .totalCount(kakaoSearchInfo.getMeta().getTotalCount())
                 .build();
-        return FetchBlogKeyword.Info.builder()
+        return FetchBlogKeyword.builder()
                 .documents(documents)
                 .meta(meta)
                 .build();
+    }
+
+    public static List<FetchBlogKeywordTop> mapSearchEntityListToDto(final List<BlogKeywordCountJpaEntity> entities) {
+        return entities.stream()
+                .map(e -> new FetchBlogKeywordTop(e.getKeyword(), e.getHit()))
+                .collect(Collectors.toList());
     }
 }
