@@ -38,11 +38,11 @@ public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
 
     private FetchBlogKeyword searchWithKakao(final Pageable pageable, final String query) {
         KakaoBlogSearch.Info info = kakaoBlogApiClient.search(BlogKeywordMapper.mapSearchParamToKakaoBlogSearchParam(pageable, query));
-        return BlogKeywordMapper.mapKakaoBlogSearchToSearchBlogInfo(info);
+        return BlogKeywordMapper.mapKakaoBlogSearchToSearchBlogInfo(pageable, info);
     }
 
     private FetchBlogKeyword searchWithNaver(final Pageable pageable, final String query) {
         NaverBlogSearch.Info info = naverBlogApiClient.search(BlogKeywordMapper.mapSearchParamToNaverBlogSearchParam(pageable, query));
-        return BlogKeywordMapper.mapNaverBlogSearchToSearchBlogInfo(info);
+        return BlogKeywordMapper.mapNaverBlogSearchToSearchBlogInfo(pageable, info);
     }
 }

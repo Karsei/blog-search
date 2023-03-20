@@ -33,7 +33,7 @@ public abstract class BlogKeywordMapper {
                 .build();
     }
 
-    public static FetchBlogKeyword mapKakaoBlogSearchToSearchBlogInfo(final KakaoBlogSearch.Info kakaoSearchInfo) {
+    public static FetchBlogKeyword mapKakaoBlogSearchToSearchBlogInfo(final Pageable pageable, final KakaoBlogSearch.Info kakaoSearchInfo) {
         List<FetchBlogKeyword.Document> documents = new ArrayList<>();
         for (KakaoBlogSearch.Info.Document document : kakaoSearchInfo.getDocuments()) {
             documents.add(FetchBlogKeyword.Document.builder()
@@ -44,12 +44,14 @@ public abstract class BlogKeywordMapper {
                     .url(document.getUrl())
                     .build());
         }
-        FetchBlogKeyword.Meta meta = FetchBlogKeyword.Meta.builder()
+        FetchBlogKeyword.Pagination pagination = FetchBlogKeyword.Pagination.builder()
                 .totalCount(kakaoSearchInfo.getMeta().getTotalCount())
+                .page(pageable.getPageNumber())
+                .size(pageable.getPageSize())
                 .build();
         return FetchBlogKeyword.builder()
                 .documents(documents)
-                .meta(meta)
+                .pagination(pagination)
                 .build();
     }
 
@@ -70,7 +72,7 @@ public abstract class BlogKeywordMapper {
                 .build();
     }
 
-    public static FetchBlogKeyword mapNaverBlogSearchToSearchBlogInfo(final NaverBlogSearch.Info naverSearchInfo) {
+    public static FetchBlogKeyword mapNaverBlogSearchToSearchBlogInfo(final Pageable pageable, final NaverBlogSearch.Info naverSearchInfo) {
         List<FetchBlogKeyword.Document> documents = new ArrayList<>();
         for (NaverBlogSearch.Info.Item document : naverSearchInfo.getItems()) {
             documents.add(FetchBlogKeyword.Document.builder()
@@ -81,12 +83,14 @@ public abstract class BlogKeywordMapper {
                     .url(document.getLink())
                     .build());
         }
-        FetchBlogKeyword.Meta meta = FetchBlogKeyword.Meta.builder()
+        FetchBlogKeyword.Pagination pagination = FetchBlogKeyword.Pagination.builder()
                 .totalCount(naverSearchInfo.getTotal())
+                .page(pageable.getPageNumber())
+                .size(pageable.getPageSize())
                 .build();
         return FetchBlogKeyword.builder()
                 .documents(documents)
-                .meta(meta)
+                .pagination(pagination)
                 .build();
     }
 

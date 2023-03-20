@@ -8,13 +8,13 @@ import java.util.List;
 @Getter
 public class FetchBlogKeyword {
     private final List<Document> documents;
-    private final Meta meta;
+    private final Pagination pagination;
 
     @Builder
     public FetchBlogKeyword(final List<Document> documents,
-                            final Meta meta) {
+                            final Pagination pagination) {
         this.documents = documents;
-        this.meta = meta;
+        this.pagination = pagination;
     }
 
     @Getter
@@ -59,21 +59,28 @@ public class FetchBlogKeyword {
     }
 
     @Getter
-    public static class Meta {
+    public static class Pagination {
         /**
-         * total_count 중 노출 가능 문서 수
+         * 현재 페이지
          */
-        private final int pageableCount;
+        private final int page;
 
         /**
-         * 검색된 문서 수
+         * 출력되는 항목 개수
+         */
+        private final int size;
+
+        /**
+         * 전체 페이지
          */
         private final int totalCount;
 
         @Builder
-        public Meta(final int pageableCount,
-                    final int totalCount) {
-            this.pageableCount = pageableCount;
+        public Pagination(int page,
+                          int size,
+                          int totalCount) {
+            this.page = page;
+            this.size = size;
             this.totalCount = totalCount;
         }
     }

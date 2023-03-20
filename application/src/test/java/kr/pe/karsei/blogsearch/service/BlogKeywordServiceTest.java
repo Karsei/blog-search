@@ -38,7 +38,8 @@ class BlogKeywordServiceTest {
     void testIfFindingBlogCanBeCalled() {
         // given
         String query = "한글날";
-        Pageable pageable = PageRequest.of(1, 10, Sort.by("accuracy"));
+        String sort = "accuracy";
+        Pageable pageable = PageRequest.of(1, 10, Sort.by(sort));
 
         List<FetchBlogKeyword.Document> documents = new ArrayList<>();
         documents.add(FetchBlogKeyword.Document.builder()
@@ -46,13 +47,14 @@ class BlogKeywordServiceTest {
                 .contents("<b>한글날</b> 공휴일 추가수당에 대해 알아보도록 하겠습니다. 이 게시물을 전체적으로 읽어주시면 <b>한글날</b> 공휴일 추가수당을 알아두시는 데에 보탬이 될 것입니다. <b>한글날</b> 공휴일 추가수당의 정보가 필요하다면 전체 다 읽어주세요. 이제 밑에서 <b>한글날</b> 공휴일 추가수당을 알려드리겠습니다. <b>한글날</b> 공휴일 추가수당 통풍에...")
                 .dateTime(ZonedDateTime.of(2023, 2, 19, 22, 4, 34, 0, ZoneId.of("Asia/Seoul")))
                 .build());
-        FetchBlogKeyword.Meta meta = FetchBlogKeyword.Meta.builder()
-                .pageableCount(800)
+        FetchBlogKeyword.Pagination pagination = FetchBlogKeyword.Pagination.builder()
+                .page(pageable.getPageNumber())
+                .size(pageable.getPageSize())
                 .totalCount(346401)
                 .build();
         FetchBlogKeyword info = FetchBlogKeyword.builder()
                 .documents(documents)
-                .meta(meta)
+                .pagination(pagination)
                 .build();
         given(apiLoadPort.searchBlog(any(Pageable.class), anyString())).willReturn(info);
 
@@ -67,9 +69,10 @@ class BlogKeywordServiceTest {
         assertThat(result.getDocuments().get(0).getTitle()).isEqualTo(documents.get(0).getTitle());
         assertThat(result.getDocuments().get(0).getUrl()).isEqualTo(documents.get(0).getUrl());
         assertThat(result.getDocuments().get(0).getDateTime()).isEqualTo(documents.get(0).getDateTime());
-        assertThat(result.getMeta()).isNotNull();
-        assertThat(result.getMeta().getPageableCount()).isEqualTo(meta.getPageableCount());
-        assertThat(result.getMeta().getTotalCount()).isEqualTo(meta.getTotalCount());
+        assertThat(result.getPagination()).isNotNull();
+        assertThat(result.getPagination().getPage()).isEqualTo(pagination.getPage());
+        assertThat(result.getPagination().getSize()).isEqualTo(pagination.getSize());
+        assertThat(result.getPagination().getTotalCount()).isEqualTo(pagination.getTotalCount());
     }
 
     @Test

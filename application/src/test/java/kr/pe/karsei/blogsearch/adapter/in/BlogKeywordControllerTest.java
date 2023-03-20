@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -34,6 +36,10 @@ class BlogKeywordControllerTest {
     @Test
     void search() throws Exception {
         // given
+        String query = "한글날";
+        String sort = "accuracy";
+        Pageable pageable = PageRequest.of(1, 10, Sort.by(sort));
+
         List<FetchBlogKeyword.Document> documents = new ArrayList<>();
         documents.add(FetchBlogKeyword.Document.builder()
                 .blogName("너무나도어렵네")
@@ -42,26 +48,27 @@ class BlogKeywordControllerTest {
                 .title("<b>한글날</b> 공휴일 추가수당 보기쉽게 정리완료했습니다.")
                 .url("http://starnews.heetsu.com/636")
                 .build());
-        FetchBlogKeyword.Meta meta = FetchBlogKeyword.Meta.builder()
-                .pageableCount(800)
+        FetchBlogKeyword.Pagination pagination = FetchBlogKeyword.Pagination.builder()
+                .page(pageable.getPageNumber())
+                .size(pageable.getPageSize())
                 .totalCount(346398)
                 .build();
         FetchBlogKeyword info = FetchBlogKeyword.builder()
                 .documents(documents)
-                .meta(meta)
+                .pagination(pagination)
                 .build();
         given(queryUseCase.findBlog(any(Pageable.class), anyString())).willReturn(info);
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.get("/search")
-                        .param("query", "한글날")
-                        .param("sort", "ACCURACY")
-                        .param("page", "1")
-                        .param("size", "1"))
+                        .param("query", query)
+                        .param("sort", sort)
+                        .param("page", String.valueOf(pagination.getPage()))
+                        .param("size", String.valueOf(pagination.getSize())))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.documents").exists())
-                .andExpect(jsonPath("$.meta").exists())
+                .andExpect(jsonPath("$.pagination").exists())
                 .andDo(print());
     }
 

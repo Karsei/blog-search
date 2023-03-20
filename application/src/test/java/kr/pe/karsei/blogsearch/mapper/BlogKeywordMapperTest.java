@@ -93,6 +93,9 @@ class BlogKeywordMapperTest {
     @Test
     void testMappingKakaoBlogSearchToSearchBlogInfo() {
         // given
+        String sort = "accuracy";
+        Pageable pageable = PageRequest.of(1, 10, Sort.by(sort));
+
         List<KakaoBlogSearch.Info.Document> documents = new ArrayList<>();
         documents.add(KakaoBlogSearch.Info.Document.builder()
                 .blogName("너무나도어렵네")
@@ -112,7 +115,7 @@ class BlogKeywordMapperTest {
                 .build();
 
         // when
-        FetchBlogKeyword result = BlogKeywordMapper.mapKakaoBlogSearchToSearchBlogInfo(info);
+        FetchBlogKeyword result = BlogKeywordMapper.mapKakaoBlogSearchToSearchBlogInfo(pageable, info);
 
         // then
         assertThat(result).isNotNull();
@@ -123,9 +126,10 @@ class BlogKeywordMapperTest {
         assertThat(result.getDocuments().get(0).getDateTime()).isEqualTo(documents.get(0).getDateTime());
         assertThat(result.getDocuments().get(0).getTitle()).isEqualTo(documents.get(0).getTitle());
         assertThat(result.getDocuments().get(0).getUrl()).isEqualTo(documents.get(0).getUrl());
-        assertThat(result.getMeta()).isNotNull();
-        assertThat(result.getMeta().getPageableCount()).isEqualTo(meta.getPageableCount());
-        assertThat(result.getMeta().getTotalCount()).isEqualTo(meta.getTotalCount());
+        assertThat(result.getPagination()).isNotNull();
+        assertThat(result.getPagination().getPage()).isEqualTo(pageable.getPageNumber());
+        assertThat(result.getPagination().getSize()).isEqualTo(pageable.getPageSize());
+        assertThat(result.getPagination().getTotalCount()).isEqualTo(meta.getTotalCount());
     }
 
     @Test
