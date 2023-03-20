@@ -22,7 +22,7 @@ public class BlogKeywordService implements BlogKeywordQueryUseCase {
     @Override
     public FetchBlogKeyword findBlog(final Pageable pageable, final String query) {
         // 조회
-        FetchBlogKeyword info = apiLoadPort.searchBlog(pageable, query);
+        FetchBlogKeyword info = apiLoadPort.search(pageable, query);
         // 검색 키워드 이벤트 발행
         eventPublisher.publishEvent(new BlogKeywordFetchEvent(query));
         return info;

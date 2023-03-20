@@ -57,7 +57,7 @@ class BlogKeywordClientAdapterTest {
         given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willReturn(info);
 
         // when
-        FetchBlogKeyword result = clientAdapter.searchBlog(pageable, query);
+        FetchBlogKeyword result = clientAdapter.search(pageable, query);
 
         // then
         assertThat(result).isNotNull();
@@ -82,7 +82,7 @@ class BlogKeywordClientAdapterTest {
         given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willThrow(FeignException.FeignClientException.class);
 
         // when & then
-        assertThatThrownBy(() -> clientAdapter.searchBlog(pageable, query))
+        assertThatThrownBy(() -> clientAdapter.search(pageable, query))
                 .isInstanceOf(BlogKeywordException.class)
                 .hasMessageContaining("요청이 잘못되었습니다.");
     }
@@ -95,7 +95,7 @@ class BlogKeywordClientAdapterTest {
         given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willThrow(FeignException.FeignServerException.class);
 
         // when & then
-        assertThatThrownBy(() -> clientAdapter.searchBlog(pageable, query))
+        assertThatThrownBy(() -> clientAdapter.search(pageable, query))
                 .isInstanceOf(BlogKeywordException.class)
                 .hasMessageContaining("원격 API 서버에서 오류가 발생했습니다.");
     }
@@ -108,7 +108,7 @@ class BlogKeywordClientAdapterTest {
         given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willThrow(RuntimeException.class);
 
         // when & then
-        assertThatThrownBy(() -> clientAdapter.searchBlog(pageable, query))
+        assertThatThrownBy(() -> clientAdapter.search(pageable, query))
                 .isInstanceOf(BlogKeywordException.class)
                 .hasMessageContaining("알 수 없는 오류입니다.");
     }

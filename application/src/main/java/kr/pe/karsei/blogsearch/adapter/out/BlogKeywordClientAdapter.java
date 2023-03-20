@@ -21,7 +21,7 @@ public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
     private final NaverBlogApiClient naverBlogApiClient;
 
     @Override
-    public FetchBlogKeyword searchBlog(final Pageable pageable, final String query) {
+    public FetchBlogKeyword search(final Pageable pageable, final String query) {
         try {
             return searchWithKakao(pageable, query);
         }

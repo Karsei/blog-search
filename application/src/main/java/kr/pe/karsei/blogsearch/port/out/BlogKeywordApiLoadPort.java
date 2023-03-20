@@ -10,5 +10,5 @@ public interface BlogKeywordApiLoadPort {
      * @param query 질의할 단어
      * @return 블로그 검색 결과
      */
-    FetchBlogKeyword searchBlog(Pageable pageable, String query);
+    FetchBlogKeyword search(Pageable pageable, String query);
 }
