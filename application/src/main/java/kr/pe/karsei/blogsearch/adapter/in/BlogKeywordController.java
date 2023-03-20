@@ -2,13 +2,15 @@ package kr.pe.karsei.blogsearch.adapter.in;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeywordTop;
 import kr.pe.karsei.blogsearch.port.in.BlogKeywordQueryUseCase;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +27,18 @@ public class BlogKeywordController {
     /**
      * 블로그를 검색합니다.
      * @param query 질의할 단어
-     * @param pageable 페이징
+     * @param page 페이지
+     * @param size 출력할 개수
+     * @param sort 정렬
      * @return 블로그 검색 결과
      */
     @GetMapping("search")
-    public ResponseEntity<FetchBlogKeyword> search(@RequestParam final String query,
-                                                   @PageableDefault(page = 1, size = 10, sort = {"accuracy"}) final Pageable pageable) {
-        FetchBlogKeyword info = queryUseCase.findBlog(pageable, query);
+    public ResponseEntity<FetchBlogKeyword> search(
+            @RequestParam @Valid @NotBlank final String query,
+            @RequestParam(required = false, defaultValue = "1") @Valid @Min(1) @Max(10) final int page,
+            @RequestParam(required = false, defaultValue = "10") @Valid @Min(1) @Max(50) final int size,
+            @RequestParam(required = false, defaultValue = "accuracy") @Valid @NotBlank final String sort) {
+        FetchBlogKeyword info = queryUseCase.findBlog(PageRequest.of(page, size, Sort.by(sort)), query);
         return ResponseEntity.ok(info);
     }
 
