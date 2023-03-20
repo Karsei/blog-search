@@ -76,9 +76,9 @@ public class FetchBlogKeyword {
         private final int totalCount;
 
         @Builder
-        public Pagination(int page,
-                          int size,
-                          int totalCount) {
+        public Pagination(final int page,
+                          final int size,
+                          final int totalCount) {
             this.page = page;
             this.size = size;
             this.totalCount = totalCount;
