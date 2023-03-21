@@ -7,7 +7,7 @@
 
 ## Download
 
-[app.jar](https://github.com/Karsei/bs/releases/download/1.0.0/app.jar)
+[app.jar](https://github.com/Karsei/bs/releases/download/1.0.1/app.jar)
 
 ### Usage
 
