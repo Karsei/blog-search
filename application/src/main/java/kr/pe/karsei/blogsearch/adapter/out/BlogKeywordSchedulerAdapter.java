@@ -26,7 +26,7 @@ public class BlogKeywordSchedulerAdapter {
 
     @Scheduled(fixedDelay = 1000)
     @Transactional
-    void countScheduler() {
+    public void countScheduler() {
         // 마지막으로 조회했던 이벤트 번호 확인
         BlogKeywordEventSnapshotJpaEntity lastEntity = eventSnapshotRepository.findFirstBy()
                 .orElseGet(() -> new BlogKeywordEventSnapshotJpaEntity(null, 0L));
