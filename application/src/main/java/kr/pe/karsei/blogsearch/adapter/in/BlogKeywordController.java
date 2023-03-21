@@ -11,14 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Validated
-@RequestMapping
 @RestController
+@RequestMapping
 @RequiredArgsConstructor
 public class BlogKeywordController {
     private final BlogKeywordQueryUseCase queryUseCase;
