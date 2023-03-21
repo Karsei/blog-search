@@ -1,4 +1,4 @@
-package kr.pe.karsei.client.kakao.config;
+package kr.pe.karsei.client.kakao.feign;
 
 import feign.Request;
 import feign.RequestInterceptor;

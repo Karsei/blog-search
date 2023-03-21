@@ -1,6 +1,6 @@
 package kr.pe.karsei.client.kakao;
 
-import kr.pe.karsei.client.kakao.config.KakaoClientFeignConfiguration;
+import kr.pe.karsei.client.kakao.feign.KakaoClientFeignConfiguration;
 import kr.pe.karsei.client.kakao.dto.KakaoBlogSearch;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;

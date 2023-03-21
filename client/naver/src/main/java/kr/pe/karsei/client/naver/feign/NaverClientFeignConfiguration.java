@@ -1,4 +1,4 @@
-package kr.pe.karsei.client.naver.config;
+package kr.pe.karsei.client.naver.feign;
 
 import feign.Request;
 import feign.RequestInterceptor;

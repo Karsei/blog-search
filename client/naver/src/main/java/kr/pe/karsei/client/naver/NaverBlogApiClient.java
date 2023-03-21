@@ -1,6 +1,6 @@
 package kr.pe.karsei.client.naver;
 
-import kr.pe.karsei.client.naver.config.NaverClientFeignConfiguration;
+import kr.pe.karsei.client.naver.feign.NaverClientFeignConfiguration;
 import kr.pe.karsei.client.naver.dto.NaverBlogSearch;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
