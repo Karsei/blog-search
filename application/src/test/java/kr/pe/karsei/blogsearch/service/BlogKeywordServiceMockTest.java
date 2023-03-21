@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class BlogKeywordServiceTest {
+class BlogKeywordServiceMockTest {
     @Mock
     private ApplicationEventPublisher eventPublisher;
     @Mock

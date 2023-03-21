@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class BlogKeywordJpaAdapterTest {
+class BlogKeywordJpaAdapterMockTest {
     @Mock
     private BlogKeywordCountRepository countRepository;
     @Mock

@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest
 @AutoConfigureMockMvc
-class BlogKeywordControllerTest {
+class BlogKeywordControllerMockTest {
     @MockBean
     private BlogKeywordQueryUseCase queryUseCase;
     @Autowired

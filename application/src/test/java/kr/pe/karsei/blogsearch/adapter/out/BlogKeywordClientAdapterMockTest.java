@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class BlogKeywordClientAdapterTest {
+class BlogKeywordClientAdapterMockTest {
     @Mock
     private KakaoBlogApiClient kakaoBlogApiClient;
     @Mock
