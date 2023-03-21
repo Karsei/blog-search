@@ -32,7 +32,7 @@ class BlogKeywordEventStoreRepositoryTest {
         long startId = 0L;
 
         // when
-        Stream<BlogKeywordEventStoreJpaEntity> streamList = eventStoreRepository.findAllByIdGreaterThanOrderByCreatedAtAsc(startId);
+        Stream<BlogKeywordEventStoreJpaEntity> streamList = eventStoreRepository.findAllByIdGreaterThanOrderByIdAsc(startId);
 
         // then
         assertThat(streamList).isNotNull();

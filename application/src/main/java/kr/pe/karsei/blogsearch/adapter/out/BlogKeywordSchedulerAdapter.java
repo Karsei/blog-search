@@ -9,6 +9,7 @@ import kr.pe.karsei.blogsearch.repository.BlogKeywordEventSnapshotRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventStoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,17 +26,16 @@ public class BlogKeywordSchedulerAdapter {
     private final BlogKeywordEventStoreRepository eventStoreRepository;
     private final BlogKeywordEventSnapshotRepository eventSnapshotRepository;
 
-    @Scheduled(cron = "*/10 * * * * *")
+    @Async
+    @Scheduled(fixedDelay = 1000)
     @Transactional
     void countScheduler() {
-        log.info("Scheduler Start");
-
         // 마지막으로 조회했던 이벤트 번호 확인
         BlogKeywordEventSnapshotJpaEntity lastEntity = eventSnapshotRepository.findFirstBy()
                 .orElseGet(() -> new BlogKeywordEventSnapshotJpaEntity(null, 0L));
 
         // 이벤트 조회
-        try (Stream<BlogKeywordEventStoreJpaEntity> eventStream = eventStoreRepository.findAllByIdGreaterThanOrderByCreatedAtAsc(lastEntity.getLastId())) {
+        try (Stream<BlogKeywordEventStoreJpaEntity> eventStream = eventStoreRepository.findAllByIdGreaterThanOrderByIdAsc(lastEntity.getLastId())) {
             Iterator<BlogKeywordEventStoreJpaEntity> iterator = eventStream.iterator();
             while (iterator.hasNext()) {
                 BlogKeywordEventStoreJpaEntity eventEntity = iterator.next();
@@ -43,17 +43,15 @@ public class BlogKeywordSchedulerAdapter {
                 // 키워드 조회 후 카운트 저장
                 findKeywordAndSaveCount(eventEntity);
 
+                // 영속성 컨텍스트에서 해제
+                entityManager.detach(eventEntity);
+
                 // 마지막으로 조회한 이벤트 번호 저장
                 if (!iterator.hasNext()) {
                     eventSnapshotRepository.save(new BlogKeywordEventSnapshotJpaEntity(lastEntity.getId(), eventEntity.getId()));
                 }
-
-                // 영속성 컨텍스트에서 해제
-                entityManager.detach(eventEntity);
             }
         }
-
-        log.info("Scheduler End");
     }
 
     private void findKeywordAndSaveCount(final BlogKeywordEventStoreJpaEntity eventEntity) {
