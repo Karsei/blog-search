@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "naverBlogApiClient", url = "${client.naver.url}", primary = false, configuration = NaverClientFeignConfiguration.class)
+@FeignClient(name = "naverBlogApiClient", url = "${client.naver.url}", configuration = NaverClientFeignConfiguration.class)
 public interface NaverBlogApiClient {
     /**
      * 네이버의 블로그를 검색합니다.
