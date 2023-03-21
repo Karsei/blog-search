@@ -5,12 +5,24 @@
 * OpenJDK 17
 * Spring Boot 3.0.4
 
+## Download
+
+[app.jar](https://github.com/Karsei/bs/releases/download/1.0.0/app.jar)
+
+### Usage
+
+API 키는 내부에 포함되어 있습니다.
+
+```shell
+$ java -jar app.jar
+```
+
 ## Endpoints
 
-### 블로그 검색 API
+### [GET] 블로그 검색 API
 
 ```
-[GET] http://localhost:8080/search
+http://localhost:8080/search
 ```
 
 * **query** - 질의어
@@ -18,15 +30,23 @@
 * page - 페이지 번호 (1~50)
 * size - 페이지별 출력 개수 (1~50)
 
-### 키워드 조회수 검색 API
+### [GET] 키워드 조회수 검색 API
 
 ```
-[GET] http://localhost:8080/top-keywords
+http://localhost:8080/top-keywords
 ```
 
 * size - 키워드 출력 개수 (1~10)
+
+## Description
+
+* 헥사고날 아키텍쳐 방식으로 설계했습니다.
+* 검색어 집계 시 이벤트 소싱을 통해 DB에 저장 후, 검색어 횟수 조회 데이터를 만들기 위한 내부 스케쥴러가 포함되어 있습니다.
 
 ## Used external libraries
 
 * `Lombok` - 코드를 자동완성하기 위해 사용
 * `OpenFeign` - Interface 를 이용하여 API 를 쉽게 호출할 수 있도록 사용
+* `H2` - H2 데이터베이스 사용
+
+이 외에는 Spring 에서 제공하는 라이브러리들을 사용했습니다.
