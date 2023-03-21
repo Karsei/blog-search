@@ -6,13 +6,6 @@ spring:
       ddl-auto: create
     open-in-view: false
 
-client:
-  kakao:
-    api-key: ""
-  naver:
-    api-id: ""
-    api-secret: ""
-
 resilience4j:
   circuitbreaker:
     configs:
