@@ -26,7 +26,6 @@ public class BlogKeywordSchedulerAdapter {
     private final BlogKeywordEventStoreRepository eventStoreRepository;
     private final BlogKeywordEventSnapshotRepository eventSnapshotRepository;
 
-    @Async
     @Scheduled(fixedDelay = 1000)
     @Transactional
     void countScheduler() {
