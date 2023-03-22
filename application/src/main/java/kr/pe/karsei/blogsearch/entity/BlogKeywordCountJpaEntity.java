@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(
         name = "keyword_count",
-        indexes = { @Index(name = "date_index", columnList = "created_at ASC")}
+        indexes = { @Index(name = "date_index", columnList = "created_at")}
 )
 @Getter
 @AllArgsConstructor @NoArgsConstructor
