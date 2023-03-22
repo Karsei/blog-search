@@ -2,6 +2,7 @@ package kr.pe.karsei.blogsearch.service;
 
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeywordTop;
+import kr.pe.karsei.blogsearch.exception.BlogKeywordException;
 import kr.pe.karsei.blogsearch.port.out.BlogKeywordApiLoadPort;
 import kr.pe.karsei.blogsearch.port.out.BlogKeywordCountLoadPort;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
@@ -73,6 +75,21 @@ class BlogKeywordServiceMockTest {
         assertThat(result.getPagination().getPage()).isEqualTo(pagination.getPage());
         assertThat(result.getPagination().getSize()).isEqualTo(pagination.getSize());
         assertThat(result.getPagination().getTotalCount()).isEqualTo(pagination.getTotalCount());
+    }
+
+    @Test
+    void testIfFindingBlogCanBeCalledWithException() {
+        // given
+        String query = "한글날";
+        String sort = "accuracy";
+        Pageable pageable = PageRequest.of(1, 10, Sort.by(sort));
+
+        given(apiLoadPort.searchWithKakao(any(Pageable.class), anyString())).willThrow(RuntimeException.class);
+
+        // when & then
+        assertThatThrownBy(() -> blogKeywordService.findBlog(pageable, query))
+                .isInstanceOf(BlogKeywordException.class)
+                .hasMessageContaining("원격 API 서버로 호출하는 과정에서 오류가 발생했습니다.");
     }
 
     @Test
