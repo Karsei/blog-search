@@ -3,11 +3,11 @@ package kr.pe.karsei.blogsearch.exception;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 public class ErrorResponse {
-    private final ZonedDateTime timestamp = ZonedDateTime.now();
+    private final LocalDateTime timestamp = LocalDateTime.now();
     private final int status;
     private final String error;
     private final String message;
