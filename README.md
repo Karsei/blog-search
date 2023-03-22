@@ -38,11 +38,6 @@ http://localhost:8080/top-keywords
 
 * size - 키워드 출력 개수 (1~10)
 
-## Description
-
-* 헥사고날 아키텍쳐 방식으로 설계했습니다.
-* 검색어 집계 시 이벤트 소싱을 통해 DB에 저장 후, 검색어 횟수 조회 데이터를 만들기 위한 내부 스케쥴러가 포함되어 있습니다.
-
 ## Used external libraries
 
 * `Lombok` - 코드를 자동완성하기 위해 사용
