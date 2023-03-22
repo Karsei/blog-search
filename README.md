@@ -40,8 +40,7 @@ http://localhost:8080/top-keywords
 
 ## Used external libraries
 
-* `Lombok` - 코드를 자동완성하기 위해 사용
-* `OpenFeign` - Interface 를 이용하여 API 를 쉽게 호출할 수 있도록 사용
-* `H2` - H2 데이터베이스 사용
-
-이 외에는 Spring 에서 제공하는 라이브러리들을 사용했습니다.
+* `h2` - H2 데이터베이스 사용
+* `lombok` - 코드를 자동완성하기 위해 사용
+* `openfeign` - API 를 interface 로 쉽게 호출할 수 있도록 사용
+* `circuitbreaker-resilience4j` - 장애 시 바로 fallback 을 위해 사용
