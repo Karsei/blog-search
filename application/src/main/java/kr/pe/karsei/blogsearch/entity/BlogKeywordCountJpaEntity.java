@@ -7,10 +7,13 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "keyword_count")
+@Table(
+        name = "keyword_count",
+        indexes = { @Index(name = "date_index", columnList = "created_at ASC")}
+)
 @Getter
 @AllArgsConstructor @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -26,7 +29,6 @@ public class BlogKeywordCountJpaEntity {
     private Integer hit;
 
     @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 }
