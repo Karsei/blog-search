@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -22,7 +23,7 @@ public class BlogKeywordJpaAdapter implements BlogKeywordCountLoadPort, BlogKeyw
 
     @Override
     public List<FetchBlogKeywordTop> findTopBlogKeywords(final int size) {
-        List<BlogKeywordCountJpaEntity> list = countRepository.findAllByOrderByHitDesc(PageRequest.of(0, size));
+        List<BlogKeywordCountJpaEntity> list = countRepository.findAllByCreatedAtGreaterThanEqualOrderByHitDesc(PageRequest.of(0, size), LocalDate.now().atStartOfDay());
         return BlogKeywordMapper.mapCountEntityListToDto(list);
     }
 

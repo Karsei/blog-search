@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,8 +35,8 @@ class BlogKeywordJpaAdapterMockTest {
         // given
         int size = 10;
         List<BlogKeywordCountJpaEntity> list = new ArrayList<>();
-        list.add(new BlogKeywordCountJpaEntity(1L, "한글날", 100, new Date()));
-        given(countRepository.findAllByOrderByHitDesc(any(PageRequest.class))).willReturn(list);
+        list.add(new BlogKeywordCountJpaEntity(1L, "한글날", 100, LocalDateTime.now()));
+        given(countRepository.findAllByCreatedAtGreaterThanEqualOrderByHitDesc(any(PageRequest.class), any(LocalDateTime.class))).willReturn(list);
 
         // when
         List<FetchBlogKeywordTop> result = adapter.findTopBlogKeywords(size);

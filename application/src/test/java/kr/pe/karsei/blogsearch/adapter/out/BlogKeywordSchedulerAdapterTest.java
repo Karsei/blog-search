@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,7 @@ class BlogKeywordSchedulerAdapterTest {
         adapter.countScheduler();
 
         // then
-        List<BlogKeywordCountJpaEntity> list = countRepository.findAllByOrderByHitDesc(PageRequest.of(0, 10));
+        List<BlogKeywordCountJpaEntity> list = countRepository.findAllByCreatedAtGreaterThanEqualOrderByHitDesc(PageRequest.of(0, 10), LocalDate.now().atStartOfDay());
         assertThat(list).isNotNull();
         assertThat(list).hasSize(2);
         assertThat(list.get(0)).isNotNull();
@@ -76,7 +77,7 @@ class BlogKeywordSchedulerAdapterTest {
         adapter.countScheduler();
 
         // then
-        List<BlogKeywordCountJpaEntity> list = countRepository.findAllByOrderByHitDesc(PageRequest.of(0, 10));
+        List<BlogKeywordCountJpaEntity> list = countRepository.findAllByCreatedAtGreaterThanEqualOrderByHitDesc(PageRequest.of(0, 10), LocalDate.now().atStartOfDay());
         assertThat(list).isNotNull();
         assertThat(list).hasSize(2);
         assertThat(list.get(0)).isNotNull();

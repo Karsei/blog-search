@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -138,8 +139,8 @@ class BlogKeywordMapperTest {
     void testMappingCountEntityListToDto() {
         // given
         List<BlogKeywordCountJpaEntity> entities = new ArrayList<>();
-        entities.add(new BlogKeywordCountJpaEntity(1L, "한글날", 10, new Date()));
-        entities.add(new BlogKeywordCountJpaEntity(2L, "세종대왕", 26, new Date()));
+        entities.add(new BlogKeywordCountJpaEntity(1L, "한글날", 10, LocalDateTime.now()));
+        entities.add(new BlogKeywordCountJpaEntity(2L, "세종대왕", 26, LocalDateTime.now()));
 
         // when
         List<FetchBlogKeywordTop> result = BlogKeywordMapper.mapCountEntityListToDto(entities);

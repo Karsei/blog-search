@@ -8,6 +8,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,7 @@ class BlogKeywordCountRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        List<BlogKeywordCountJpaEntity> list = countRepository.findAllByOrderByHitDesc(pageable);
+        List<BlogKeywordCountJpaEntity> list = countRepository.findAllByCreatedAtGreaterThanEqualOrderByHitDesc(pageable, LocalDate.now().atStartOfDay());
 
         // then
         assertThat(list).isNotNull();
