@@ -31,7 +31,7 @@ public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
         return BlogKeywordMapper.mapNaverBlogSearchToSearchBlogInfo(pageable, info);
     }
 
-    private FetchBlogKeyword searchWithNaverForFallback(final Pageable pageable, final String query, Throwable ex) {
+    private FetchBlogKeyword searchWithNaverForFallback(final Pageable pageable, final String query, final Throwable ex) {
         return searchWithNaver(pageable, query);
     }
 }
