@@ -8,11 +8,11 @@ import kr.pe.karsei.blogsearch.repository.BlogKeywordCountRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventSnapshotRepository;
 import kr.pe.karsei.blogsearch.repository.BlogKeywordEventStoreRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
@@ -56,7 +56,7 @@ public class BlogKeywordSchedulerAdapter {
         String keyword = eventEntity.getPayload();
 
         // 저장
-        countRepository.save(countRepository.findByKeyword(keyword)
+        countRepository.save(countRepository.findByCreatedAtAndKeyword(LocalDateTime.now(), keyword)
                 .map(blogKeywordCountJpaEntity -> new BlogKeywordCountJpaEntity(
                         blogKeywordCountJpaEntity.getId(),
                         blogKeywordCountJpaEntity.getKeyword(),

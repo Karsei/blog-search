@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface BlogKeywordCountRepository extends JpaRepository<BlogKeywordCountJpaEntity, Long> {
     List<BlogKeywordCountJpaEntity> findAllByCreatedAtGreaterThanEqualOrderByHitDesc(Pageable pageable, LocalDateTime createdAt);
-    Optional<BlogKeywordCountJpaEntity> findByKeyword(String keyword);
+    Optional<BlogKeywordCountJpaEntity> findByCreatedAtAndKeyword(LocalDateTime createdAt, String keyword);
 }
