@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
@@ -56,7 +56,7 @@ public class BlogKeywordSchedulerAdapter {
         String keyword = eventEntity.getPayload();
 
         // 저장
-        countRepository.save(countRepository.findByCreatedAtAndKeyword(LocalDateTime.now(), keyword)
+        countRepository.save(countRepository.findByCreatedAtAndKeyword(LocalDate.now().atStartOfDay(), keyword)
                 .map(blogKeywordCountJpaEntity -> new BlogKeywordCountJpaEntity(
                         blogKeywordCountJpaEntity.getId(),
                         blogKeywordCountJpaEntity.getKeyword(),
