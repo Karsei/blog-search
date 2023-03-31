@@ -22,7 +22,7 @@ public class BlogKeywordCountJpaEntity {
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private String keyword;
 
     @Column
