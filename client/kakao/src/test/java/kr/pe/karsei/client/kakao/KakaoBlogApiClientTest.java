@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootApplication
 public class KakaoBlogApiClientTest {
     @Autowired
-    private KakaoBlogApiClient client;
+    private KakaoBlogApiClient kakaoBlogApiClient;
 
     @Test
     void testIfClientCanBeCalled() {
@@ -31,7 +31,7 @@ public class KakaoBlogApiClientTest {
                 .build();
 
         // when
-        KakaoBlogSearch.Info info = client.search(param);
+        KakaoBlogSearch.Info info = kakaoBlogApiClient.search(param).block();
 
         // then
         assertThat(info).isNotNull();

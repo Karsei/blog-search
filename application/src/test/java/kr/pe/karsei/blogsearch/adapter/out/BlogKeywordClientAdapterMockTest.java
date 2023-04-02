@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -53,10 +54,10 @@ class BlogKeywordClientAdapterMockTest {
                 .pageableCount(800)
                 .totalCount(346398)
                 .build();
-        KakaoBlogSearch.Info info = KakaoBlogSearch.Info.builder()
+        Mono<KakaoBlogSearch.Info> info = Mono.just(KakaoBlogSearch.Info.builder()
                 .documents(documents)
                 .meta(meta)
-                .build();
+                .build());
         given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willReturn(info);
 
         // when

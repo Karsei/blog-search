@@ -30,7 +30,8 @@ class BlogKeywordClientAdapterTest {
                 .build();
 
         // when
-        KakaoBlogSearch.Info info = kakaoBlogApiClient.search(param);
+        KakaoBlogSearch.Info info = kakaoBlogApiClient.search(param)
+                .block();
 
         // then
         assertThat(info).isNotNull();
@@ -50,7 +51,8 @@ class BlogKeywordClientAdapterTest {
                 .build();
 
         // when
-        KakaoBlogSearch.Info info = kakaoBlogApiClient.search(param);
+        KakaoBlogSearch.Info info = kakaoBlogApiClient.search(param)
+                .block();
 
         // then
         assertThat(info).isNotNull();

@@ -10,9 +10,10 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class KakaoBlogSearch {
     @Getter
+    @NoArgsConstructor
     public static class Info {
-        private final List<Document> documents;
-        private final Meta meta;
+        private List<Document> documents;
+        private Meta meta;
 
         @Builder
         public Info(final List<Document> documents,
@@ -22,6 +23,7 @@ public class KakaoBlogSearch {
         }
 
         @Getter
+        @NoArgsConstructor
         public static class Document {
             /**
              * 블로그의 이름
@@ -73,6 +75,7 @@ public class KakaoBlogSearch {
         }
 
         @Getter
+        @NoArgsConstructor
         public static class Meta {
             /**
              * 현재 페이지가 마지막 페이지인지 여부

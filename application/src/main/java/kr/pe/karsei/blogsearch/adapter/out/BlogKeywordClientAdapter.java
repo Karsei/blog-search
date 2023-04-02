@@ -21,7 +21,7 @@ public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
     @CircuitBreaker(name = "blogSearch", fallbackMethod = "searchWithNaverForFallback")
     @Override
     public FetchBlogKeyword searchWithKakao(final Pageable pageable, final String query) {
-        KakaoBlogSearch.Info info = kakaoBlogApiClient.search(BlogKeywordMapper.mapSearchParamToKakaoBlogSearchParam(pageable, query));
+        KakaoBlogSearch.Info info = kakaoBlogApiClient.search(BlogKeywordMapper.mapSearchParamToKakaoBlogSearchParam(pageable, query)).block();
         return BlogKeywordMapper.mapKakaoBlogSearchToSearchBlogInfo(pageable, info);
     }
 
