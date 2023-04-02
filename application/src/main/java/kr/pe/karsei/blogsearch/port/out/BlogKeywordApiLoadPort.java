@@ -2,6 +2,7 @@ package kr.pe.karsei.blogsearch.port.out;
 
 import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
 import org.springframework.data.domain.Pageable;
+import reactor.core.publisher.Mono;
 
 public interface BlogKeywordApiLoadPort {
     /**
@@ -10,7 +11,7 @@ public interface BlogKeywordApiLoadPort {
      * @param query 질의할 단어
      * @return 블로그 검색 결과
      */
-    FetchBlogKeyword searchWithKakao(Pageable pageable, String query);
+    Mono<FetchBlogKeyword> searchWithKakao(Pageable pageable, String query);
 
     /**
      * 네이버 블로그를 검색합니다.

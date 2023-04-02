@@ -24,7 +24,7 @@ public class KakaoBlogApiClientTest {
     void testIfClientCanBeCalled() {
         // given
         KakaoBlogSearch.Param param = KakaoBlogSearch.Param.builder()
-                .query("한글날")
+                .query("")
                 .sort(KakaoBlogSearch.Param.Sort.ACCURACY)
                 .page(1)
                 .size(10)

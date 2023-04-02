@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import reactor.core.publisher.Mono;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -54,14 +55,14 @@ class BlogKeywordServiceMockTest {
                 .size(pageable.getPageSize())
                 .totalCount(346401)
                 .build();
-        FetchBlogKeyword info = FetchBlogKeyword.builder()
+        Mono<FetchBlogKeyword> info = Mono.just(FetchBlogKeyword.builder()
                 .documents(documents)
                 .pagination(pagination)
-                .build();
+                .build());
         given(apiLoadPort.searchWithKakao(any(Pageable.class), anyString())).willReturn(info);
 
         // when
-        FetchBlogKeyword result = blogKeywordService.findBlog(pageable, query);
+        FetchBlogKeyword result = blogKeywordService.findBlog(pageable, query).block();
 
         // then
         assertThat(result).isNotNull();

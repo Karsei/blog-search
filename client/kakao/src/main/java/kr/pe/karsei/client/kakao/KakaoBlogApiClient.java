@@ -1,6 +1,7 @@
 package kr.pe.karsei.client.kakao;
 
 import kr.pe.karsei.client.kakao.dto.KakaoBlogSearch;
+import org.springframework.lang.NonNull;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -14,6 +15,7 @@ public class KakaoBlogApiClient {
         this.kakaoApiClient = kakaoApiClient;
     }
 
+    @NonNull
     public Mono<KakaoBlogSearch.Info> search(final KakaoBlogSearch.Param params) {
         MultiValueMap<String, String> valueMap = new LinkedMultiValueMap<>();
         if (StringUtils.hasText(params.getQuery())) {

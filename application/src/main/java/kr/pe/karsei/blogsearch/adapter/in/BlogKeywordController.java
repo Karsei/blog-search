@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -31,13 +32,12 @@ public class BlogKeywordController {
      * @return 블로그 검색 결과
      */
     @GetMapping("search")
-    public ResponseEntity<FetchBlogKeyword> search(
+    public Mono<FetchBlogKeyword> search(
             @RequestParam @NotBlank final String query,
             @RequestParam(required = false, defaultValue = "1") @Min(1) @Max(50) final int page,
             @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(50) final int size,
             @RequestParam(required = false, defaultValue = "accuracy") @NotBlank final String sort) {
-        FetchBlogKeyword info = queryUseCase.findBlog(PageRequest.of(page, size, Sort.by(sort)), query);
-        return ResponseEntity.ok(info);
+        return queryUseCase.findBlog(PageRequest.of(page, size, Sort.by(sort)), query);
     }
 
     /**

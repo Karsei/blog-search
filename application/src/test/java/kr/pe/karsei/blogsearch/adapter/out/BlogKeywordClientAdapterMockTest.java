@@ -61,7 +61,7 @@ class BlogKeywordClientAdapterMockTest {
         given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willReturn(info);
 
         // when
-        FetchBlogKeyword result = clientAdapter.searchWithKakao(pageable, query);
+        FetchBlogKeyword result = clientAdapter.searchWithKakao(pageable, query).block();
 
         // then
         assertThat(result).isNotNull();
@@ -86,7 +86,7 @@ class BlogKeywordClientAdapterMockTest {
         given(kakaoBlogApiClient.search(any(KakaoBlogSearch.Param.class))).willThrow(RuntimeException.class);
 
         // when & then
-        assertThatThrownBy(() -> clientAdapter.searchWithKakao(pageable, query))
+        assertThatThrownBy(() -> clientAdapter.searchWithKakao(pageable, query).block())
                 .isInstanceOf(RuntimeException.class);
     }
 

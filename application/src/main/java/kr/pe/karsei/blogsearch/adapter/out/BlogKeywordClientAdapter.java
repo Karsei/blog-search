@@ -5,12 +5,12 @@ import kr.pe.karsei.blogsearch.dto.FetchBlogKeyword;
 import kr.pe.karsei.blogsearch.mapper.BlogKeywordMapper;
 import kr.pe.karsei.blogsearch.port.out.BlogKeywordApiLoadPort;
 import kr.pe.karsei.client.kakao.KakaoBlogApiClient;
-import kr.pe.karsei.client.kakao.dto.KakaoBlogSearch;
 import kr.pe.karsei.client.naver.NaverBlogApiClient;
 import kr.pe.karsei.client.naver.dto.NaverBlogSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
@@ -20,9 +20,9 @@ public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
 
     @CircuitBreaker(name = "blogSearch", fallbackMethod = "searchWithNaverForFallback")
     @Override
-    public FetchBlogKeyword searchWithKakao(final Pageable pageable, final String query) {
-        KakaoBlogSearch.Info info = kakaoBlogApiClient.search(BlogKeywordMapper.mapSearchParamToKakaoBlogSearchParam(pageable, query)).block();
-        return BlogKeywordMapper.mapKakaoBlogSearchToSearchBlogInfo(pageable, info);
+    public Mono<FetchBlogKeyword> searchWithKakao(final Pageable pageable, final String query) {
+        return kakaoBlogApiClient.search(BlogKeywordMapper.mapSearchParamToKakaoBlogSearchParam(pageable, query))
+                .flatMap(it -> Mono.just(BlogKeywordMapper.mapKakaoBlogSearchToSearchBlogInfo(pageable, it)));
     }
 
     @Override
@@ -31,7 +31,7 @@ public class BlogKeywordClientAdapter implements BlogKeywordApiLoadPort {
         return BlogKeywordMapper.mapNaverBlogSearchToSearchBlogInfo(pageable, info);
     }
 
-    private FetchBlogKeyword searchWithNaverForFallback(final Pageable pageable, final String query, final Throwable ex) {
-        return searchWithNaver(pageable, query);
+    private Mono<FetchBlogKeyword> searchWithNaverForFallback(final Pageable pageable, final String query, final Throwable ex) {
+        return Mono.just(searchWithNaver(pageable, query));
     }
 }

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -23,18 +24,14 @@ public class BlogKeywordService implements BlogKeywordQueryUseCase {
     private final BlogKeywordCountLoadPort countLoadPort;
 
     @Override
-    public FetchBlogKeyword findBlog(final Pageable pageable, final String query) {
+    public Mono<FetchBlogKeyword> findBlog(final Pageable pageable, final String query) {
         // 조회
-        FetchBlogKeyword info;
-        try {
-            info = apiLoadPort.searchWithKakao(pageable, query);
-        }
-        catch (RuntimeException e) {
-            throw new BlogKeywordException(ERROR_ON_API, e);
-        }
-        // 검색 키워드 이벤트 발행
-        eventPublisher.publishEvent(new BlogKeywordFetchEvent(query));
-        return info;
+        return apiLoadPort.searchWithKakao(pageable, query)
+                .map(it -> {
+                    // 검색 키워드 이벤트 발행
+                    eventPublisher.publishEvent(new BlogKeywordFetchEvent(query));
+                    return it;
+                });
     }
 
     @Override
